@@ -12,10 +12,12 @@ import { CTABanner } from './components/sections/CTABanner';
 import { FAQ } from './components/sections/FAQ';
 import { Newsletter } from './components/sections/Newsletter';
 import { Contact } from './components/sections/Contact';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (
     <>
+      <SpeedInsights />
       <Navbar />
       <main>
         <Hero />
