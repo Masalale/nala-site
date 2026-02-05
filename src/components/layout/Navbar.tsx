@@ -1,0 +1,121 @@
+import { useState, useEffect } from 'react';
+
+export function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Nav items ordered to match page section flow
+  const navItems = [
+    { label: 'Why NALA', href: '#benefits' },
+    { label: 'Shop', href: '#products' },
+    { label: 'Our Story', href: '#story' },
+    { label: 'Contact', href: '#contact' },
+  ];
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${isScrolled
+        ? 'py-2 bg-surface/80 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-white/20'
+        : 'py-4 bg-transparent'
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <a
+            href="#"
+            className="flex items-center gap-3 group"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <img
+                src="/images/plainbg_logo.png"
+                alt="Nature's Lather (NALA)"
+                className="relative w-15 h-15 object-contain rounded-full transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+            <span className="hidden sm:block font-heading text-xl font-semibold text-text tracking-wide">
+              Nature's Lather
+            </span>
+          </a>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center">
+            {/* Nav Pills Container */}
+            <div className="flex items-center gap-1 bg-background/60 backdrop-blur-sm rounded-full px-2 py-1.5 border border-secondary/10">
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text rounded-full transition-all duration-300 hover:bg-white/60"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-secondary/10 transition-all duration-300 hover:bg-white/80"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <div className="w-5 h-4 flex flex-col justify-center items-center">
+              <span
+                className={`block h-0.5 w-5 bg-text rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'
+                  }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-text rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'
+                  }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-text rounded-full transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-0.5' : 'translate-y-1'
+                  }`}
+              />
+            </div>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${isMobileMenuOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
+            }`}
+        >
+          <div className="bg-surface/95 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-black/5 p-4">
+            <div className="space-y-1">
+              {navItems.map((item, index) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="block py-3 px-4 text-text hover:text-secondary hover:bg-background/60 rounded-xl transition-all duration-300 font-medium"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
