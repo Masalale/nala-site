@@ -18,16 +18,16 @@ export function Story() {
             </h2>
             <div className="space-y-4 text-text-muted leading-relaxed">
               <p>
-                Hey there, soap lovers! As Nature's Lather, we are dedicated to
-                turning your shower time into a mini Kenyan paradise.
+                Nature’s Lather began with a simple question: What if soap actually respected the skin?
               </p>
               <p>
-                Our organic soaps are like a mini safari for your skin! We're
-                committed to using natural, organic ingredients because we believe
-                that what's good for the earth is good for your skin.
+                Tired of harsh, over-processed products, we started experimenting with traditional soap-making methods and natural ingredients known for their real benefits. Tallow, plant oils, clays, oats—ingredients used for generations, chosen for a reason.
+              </p>
+              <p>
+                Each bar is made in small batches, cured patiently, and formulated to serve a purpose—whether that’s calming sensitive skin, cleansing deeply, or restoring balance.
               </p>
               <p className="font-medium text-text">
-                Every bar is still made by hand, in small batches, with ingredients we'd proudly display on our own bathroom shelves.
+                Nature’s Lather isn’t about trends. It’s about returning to what works and doing it well.
               </p>
             </div>
             <div className="mt-8">

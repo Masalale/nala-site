@@ -24,11 +24,10 @@ export function Contact() {
   return (
     <section id="contact" className="py-24 bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div 
+        <div
           ref={ref}
-          className={`transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+          className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold text-text mb-4">
@@ -65,7 +64,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-text mb-2">
-                    Phone (for M-Pesa) *
+                    Phone *
                   </label>
                   <input
                     type="tel"
@@ -118,7 +117,7 @@ export function Contact() {
           <div className="mt-8 text-center">
             <p className="text-text-muted mb-2">Or reach us directly on WhatsApp</p>
             <a
-              href="https://wa.me/254700000000"
+              href="https://wa.me/254702255299"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-medium transition-colors"

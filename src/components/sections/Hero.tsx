@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
@@ -5,7 +6,7 @@ export function Hero() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-[#f5f0e6]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
@@ -18,19 +19,24 @@ export function Hero() {
       >
         <div className="text-center lg:text-left">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-text leading-tight mb-6">
-            Pure Ingredients.{' '}
-            <span className="text-secondary">Pure Clean.</span>
+            From Nature.{' '}
+            <br />
+            <span className="text-secondary">For Skin.</span>
           </h1>
           <p className="text-lg sm:text-xl text-text-muted mb-8 max-w-xl mx-auto lg:mx-0">
-            Handcrafted soaps made with organic botanicals. No parabens, no sulfates, just nature's best for your skin.
+            Soap, the way nature intended.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Button variant="primary" size="lg">
-              Shop Collection
-            </Button>
-            <Button variant="outline" size="lg">
-              Our Story
-            </Button>
+            <Link to="/shop">
+              <Button variant="primary" size="lg">
+                Shop Collection
+              </Button>
+            </Link>
+            <Link to="/#story">
+              <Button variant="outline" size="lg">
+                Our Story
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -50,11 +56,11 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <a href="#benefits" className="text-text-muted hover:text-secondary transition-colors">
+        <Link to="/#benefits" className="text-text-muted hover:text-secondary transition-colors">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
-        </a>
+        </Link>
       </div>
     </section>
   );

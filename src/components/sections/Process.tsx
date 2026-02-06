@@ -27,7 +27,7 @@ export function Process() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
@@ -55,7 +55,7 @@ export function Process() {
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Step Circle */}
-                <div className="relative z-10 w-16 h-16 mx-auto mb-6 bg-surface border-2 border-primary/20 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:border-primary transition-all duration-300">
+                <div className="relative z-10 w-16 h-16 mx-auto mb-6 bg-background border-2 border-primary/20 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:border-primary transition-all duration-300">
                   <span className="text-secondary font-heading font-bold text-xl group-hover:text-primary transition-colors">{step.number}</span>
                 </div>
 

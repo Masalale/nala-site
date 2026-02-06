@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -21,11 +23,24 @@ export function Navbar() {
 
   // Nav items ordered to match page section flow
   const navItems = [
-    { label: 'Why NALA', href: '#benefits' },
-    { label: 'Shop', href: '#products' },
-    { label: 'Our Story', href: '#story' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Why NALA', href: '/#benefits' },
+    { label: 'Shop', href: '/shop' },
+    { label: 'Our Story', href: '/#story' },
+    { label: 'Contact', href: '/#contact' },
   ];
+
+  const handleLinkClick = (href: string) => {
+    setIsMobileMenuOpen(false);
+    if (href === '/' && location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (href.startsWith('/#') && location.pathname === '/') {
+      const id = href.substring(2);
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <nav
@@ -37,9 +52,10 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a
-            href="#"
+          <Link
+            to="/"
             className="flex items-center gap-3 group"
+            onClick={() => handleLinkClick('/')}
           >
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -52,27 +68,28 @@ export function Navbar() {
             <span className="hidden sm:block font-heading text-xl font-semibold text-text tracking-wide">
               Nature's Lather
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             {/* Nav Pills Container */}
             <div className="flex items-center gap-1 bg-background/60 backdrop-blur-sm rounded-full px-2 py-1.5 border border-secondary/10">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
-                  className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text rounded-full transition-all duration-300 hover:bg-white/60"
+                  to={item.href}
+                  className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text rounded-full transition-all duration-300 hover:bg-surface/60"
+                  onClick={() => handleLinkClick(item.href)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-secondary/10 transition-all duration-300 hover:bg-white/80"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-secondary/10 transition-all duration-300 hover:bg-surface/80"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
@@ -102,15 +119,15 @@ export function Navbar() {
           <div className="bg-surface/95 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-black/5 p-4">
             <div className="space-y-1">
               {navItems.map((item, index) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.href}
                   className="block py-3 px-4 text-text hover:text-secondary hover:bg-background/60 rounded-xl transition-all duration-300 font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => handleLinkClick(item.href)}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

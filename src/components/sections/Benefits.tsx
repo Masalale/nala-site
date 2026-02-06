@@ -22,8 +22,8 @@ const benefits = [
     icon: '♻️',
   },
   {
-    title: 'Suitable for Sensitive Skin',
-    description: 'pH-balanced formulas with natural glycerin. Gentle enough for daily use.',
+    title: 'Skin‑focused formulas',
+    description: 'Each bar is designed around real skin needs — not trends.',
     icon: '💚',
   },
   {
@@ -39,11 +39,10 @@ export function Benefits() {
   return (
     <section id="benefits" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div 
+        <div
           ref={ref}
-          className={`text-center mb-16 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+          className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-text mb-4">
             Why Choose <span className="text-secondary">NALA</span>?
@@ -57,9 +56,8 @@ export function Benefits() {
           {benefits.map((benefit, index) => (
             <div
               key={benefit.title}
-              className={`group bg-surface p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+              className={`group bg-surface p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
