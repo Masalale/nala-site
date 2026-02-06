@@ -16,13 +16,6 @@ Pure ingredients. Pure clean. No parabens, no sulfates, just nature's best for y
 - **M-Pesa integration**: Seamless payments for Kenyan customers
 - **Eco-conscious**: Plastic-free packaging, locally sourced ingredients
 
-## 🚀 Quick Start
-
-```bash
-bun install
-bun dev
-```
-
 ## 🛠️ Built With
 
 - **React 19** — UI library
@@ -31,5 +24,3 @@ bun dev
 - **TypeScript** — Type safety
 
 ---
-
-*Handcrafted with care in Nairobi, Kenya* 🇰🇪

@@ -37,16 +37,21 @@ export function Story() {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 relative">
+          <div className="order-1 lg:order-2 relative max-w-md mx-auto">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/10 rounded-3xl blur-2xl" />
             <video
-              src="/images/video_01_av1.webm"
+              poster="/images/video_01_poster.jpg"
               autoPlay
               loop
               muted
               playsInline
+              preload="metadata"
               className="relative w-full aspect-[4/5] object-cover rounded-3xl shadow-2xl"
-            />
+            >
+              <source src="/images/video_01_av1.webm" type="video/webm" />
+              <source src="/images/video_01.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>

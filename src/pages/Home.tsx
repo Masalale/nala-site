@@ -21,9 +21,9 @@ export function Home() {
             <Process />
             <Sustainability />
             <CTABanner />
-            <FAQ />
             <Newsletter />
             <Contact />
+            <FAQ />
         </>
     );
 }

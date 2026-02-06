@@ -41,16 +41,21 @@ export function Hero() {
         </div>
 
         <div className="relative">
-          <div className="relative aspect-[3/4] max-w-lg mx-auto">
+          <div className="relative aspect-[3/4] max-w-md mx-auto">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/20 rounded-3xl blur-2xl" />
             <video
-              src="/images/video_02_av1.webm"
+              poster="/images/video_02_poster.jpg"
               autoPlay
               loop
               muted
               playsInline
+              preload="metadata"
               className="relative z-10 w-full h-full object-cover rounded-3xl shadow-2xl hover:scale-105 transition-transform duration-500"
-            />
+            >
+              <source src="/images/video_02_av1.webm" type="video/webm" />
+              <source src="/images/video_02.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
