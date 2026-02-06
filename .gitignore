@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Project planning/docs (not needed for production)
+LANDING_PAGE_INSTRUCTIONS.md
+previous_colors.md
+design-dna.json
+
+# Cache files
+*.cache
+.cache/
