@@ -31,3 +31,10 @@ design-dna.json
 # Cache files
 *.cache
 .cache/
+
+# Sisyphus planning artifacts
+.sisyphus/
+
+# Lighthouse reports
+lighthouse_*.json
+lighthouse_*.html
