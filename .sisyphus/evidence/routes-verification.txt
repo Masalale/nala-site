@@ -1,0 +1,24 @@
+=== HOME ROUTE EVIDENCE ===
+URL: http://localhost:4173/
+
+HTTP Status:
+HTTP/1.1 200 OK
+
+Content includes:
+
+=== SHOP ROUTE EVIDENCE ===
+URL: http://localhost:4173/shop
+
+HTTP Status:
+HTTP/1.1 200 OK
+
+Content includes:
+Shop
+
+=== 404 ROUTE EVIDENCE ===
+URL: http://localhost:4173/nonexistent
+
+HTTP Status:
+HTTP/1.1 200 OK
+
+Content includes:

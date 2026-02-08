@@ -50,6 +50,8 @@ export function Footer() {
                 src="/images/plainbg_logo.png"
                 alt="Nature's Lather (NALA)"
                 className="h-40 w-40 object-contain rounded-full mb-4"
+                loading="lazy"
+                decoding="async"
               />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed mb-4">

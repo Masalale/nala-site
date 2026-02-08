@@ -1,9 +1,20 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 export function Hero() {
   const { ref, isVisible } = useScrollAnimation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldLoadVideo(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
@@ -41,23 +52,32 @@ export function Hero() {
         </div>
 
         <div className="relative">
-          <div className="relative aspect-[3/4] max-w-md mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/20 rounded-3xl blur-2xl" />
-            <video
-              poster="/images/video_02_poster.jpg"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              className="relative z-10 w-full h-full object-cover rounded-3xl shadow-2xl hover:scale-105 transition-transform duration-500"
-            >
-              <source src="/images/video_02_av1.webm" type="video/webm" />
-              <source src="/images/video_02.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
+           <div className="relative aspect-[3/4] max-w-md mx-auto">
+             <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/20 rounded-3xl blur-2xl" />
+             {shouldLoadVideo && (
+               <video
+                 poster="/images/video_02_poster.jpg"
+                 autoPlay
+                 loop
+                 muted
+                 playsInline
+                 preload="metadata"
+                 className="relative z-10 w-full h-full object-cover rounded-3xl shadow-2xl hover:scale-105 transition-transform duration-500 opacity-100"
+               >
+                 <source src="/images/video_02_av1.webm" type="video/webm" />
+                 <source src="/images/video_02.mp4" type="video/mp4" />
+                 Your browser does not support the video tag.
+               </video>
+             )}
+             {!shouldLoadVideo && (
+               <img
+                 src="/images/video_02_poster.jpg"
+                 alt="Hero video poster"
+                 className="relative z-10 w-full h-full object-cover rounded-3xl shadow-2xl"
+               />
+             )}
+           </div>
+         </div>
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
