@@ -39,6 +39,15 @@ const products = [
     ingredients: ['Goat Milk', 'Coffee grounds', 'Essential Oils'],
     badge: null,
   },
+  {
+    id: 'soap-saver',
+    title: 'Soap Saver/ Exfoliation Bag',
+    description: 'Extend the life of your soap bars while gently exfoliating your skin. Perfect for using up soap remnants and creating a luxurious lather.',
+    image: '/images/soap_saver.jpg',
+    price: '200 KES',
+    ingredients: ['Natural Sisal Fiber'],
+    badge: null,
+  },
 ];
 
 function ProductCard({ product, index, isVisible }: { product: any, index: number, isVisible: boolean }) {
@@ -101,7 +110,7 @@ export function Products() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="products" className="py-24 bg-surface">
+    <section id="products" className="py-32 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
@@ -116,7 +125,7 @@ export function Products() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 gap-y-12">
           {products.map((product, index) => (
             <ProductCard
               key={product.id}

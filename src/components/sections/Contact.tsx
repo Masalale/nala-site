@@ -29,14 +29,7 @@ export function Contact() {
           className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
         >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl sm:text-5xl font-bold text-text mb-4">
-              Get in Touch
-            </h2>
-            <p className="text-lg text-text-muted">
-              Have questions? We'd love to hear from you.
-            </p>
-          </div>
+
 
           {submitted ? (
             <div className="text-center bg-secondary/10 p-8 rounded-3xl">

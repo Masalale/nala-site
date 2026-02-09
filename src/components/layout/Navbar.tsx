@@ -44,9 +44,9 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${isScrolled
-        ? 'py-2 bg-surface/80 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-white/20'
-        : 'py-4 bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${isScrolled
+        ? 'py-3 bg-surface/70 backdrop-blur-md backdrop-saturate-150 shadow-sm border-b border-white/10'
+        : 'py-5 bg-transparent'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,23 +73,29 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             {/* Nav Pills Container */}
-            <div className="flex items-center gap-1 bg-background/60 backdrop-blur-sm rounded-full px-2 py-1.5 border border-secondary/10">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text rounded-full transition-all duration-300 hover:bg-surface/60"
-                  onClick={() => handleLinkClick(item.href)}
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/20 transition-all duration-300 hover:bg-white/20">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 ${isActive
+                      ? 'bg-[#e2bd8f] text-[#3d5a3c] shadow-sm font-semibold'
+                      : 'text-text-muted hover:text-text hover:bg-white/30'
+                      }`}
+                    onClick={() => handleLinkClick(item.href)}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-secondary/10 transition-all duration-300 hover:bg-surface/80"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
@@ -116,19 +122,25 @@ export function Navbar() {
           className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${isMobileMenuOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
             }`}
         >
-          <div className="bg-surface/95 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-black/5 p-4">
+          <div className="bg-surface/85 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-black/5 p-4">
             <div className="space-y-1">
-              {navItems.map((item, index) => (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  className="block py-3 px-4 text-text hover:text-secondary hover:bg-background/60 rounded-xl transition-all duration-300 font-medium"
-                  onClick={() => handleLinkClick(item.href)}
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item, index) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className={`block py-3 px-4 rounded-xl transition-all duration-300 font-medium ${isActive
+                      ? 'bg-[#e2bd8f] text-[#3d5a3c] shadow-sm font-semibold'
+                      : 'text-text hover:text-secondary hover:bg-white/20'
+                      }`}
+                    onClick={() => handleLinkClick(item.href)}
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>

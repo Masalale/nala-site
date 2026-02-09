@@ -58,7 +58,7 @@ export function Footer() {
               Take care of your skin. It’s the only place you live in.
             </p>
             <p className="text-white/40 text-xs italic">
-              Pure Ingredients. Pure Clean.
+               From Nature. For Skin.
             </p>
           </div>
 
