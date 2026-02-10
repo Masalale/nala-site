@@ -25,7 +25,7 @@ export function FAQ() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section className="py-24 bg-surface">
+    <section className="py-24 bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
@@ -41,13 +41,13 @@ export function FAQ() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`border border-secondary/20 rounded-2xl overflow-hidden transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              className={`bg-surface border border-secondary/20 rounded-2xl overflow-hidden transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-6 text-left bg-background hover:bg-primary/5 transition-colors"
+                className="w-full flex items-center justify-between p-6 text-left bg-surface hover:bg-secondary/5 transition-colors"
               >
                 <span className="font-semibold text-text pr-4">{faq.question}</span>
                 <span className={`text-secondary transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''

@@ -8,7 +8,6 @@ import { Sustainability } from '../components/sections/Sustainability';
 import { CTABanner } from '../components/sections/CTABanner';
 import { FAQ } from '../components/sections/FAQ';
 import { Newsletter } from '../components/sections/Newsletter';
-import { Contact } from '../components/sections/Contact';
 
 export function Home() {
     return (
@@ -22,7 +21,6 @@ export function Home() {
             <Sustainability />
             <CTABanner />
             <Newsletter />
-            <Contact />
             <FAQ />
         </>
     );

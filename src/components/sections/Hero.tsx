@@ -1,23 +1,164 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
+interface MediaSource {
+  src: string;
+  type: string;
+}
+
+interface MediaItem {
+  type: 'video' | 'image';
+  sources?: MediaSource[]; // For video
+  src?: string; // For image, or fallback
+  poster?: string;
+  className?: string; // For Tailwind classes like object-position
+  style?: React.CSSProperties; // For inline styles like transform
+}
+
+const mediaItems: MediaItem[] = [
+  {
+    type: 'video',
+    sources: [
+      { src: '/videos/model_av1.webm', type: 'video/webm' },
+      { src: '/videos/model.mp4', type: 'video/mp4' }
+    ],
+    poster: '/videos/model_poster.jpg'
+  },
+  {
+    type: 'video',
+    sources: [
+      { src: '/videos/intro_av1.webm', type: 'video/webm' },
+      { src: '/videos/intro.mp4', type: 'video/mp4' }
+    ],
+    poster: '/videos/intro_poster.jpg',
+    className: 'object-bottom' // Align to bottom to show text
+  },
+  {
+    type: 'image',
+    src: '/images/collection.jpeg',
+    className: 'object-cover object-center w-full',
+    style: { height: '115%', marginTop: '-18%' }
+  },
+  {
+    type: 'image',
+    src: '/images/stamp.jpeg',
+    className: 'object-cover object-center w-full',
+    style: { height: '115%', marginTop: '-7.5%' }
+  },
+];
+
 export function Hero() {
   const { ref, isVisible } = useScrollAnimation();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % mediaItems.length);
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [activeIndex]);
+
+  // Handle video playback
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+      if (index === activeIndex) {
+        video.play().catch(() => { /* Auto-play prevented */ });
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  }, [activeIndex]);
+
+  // Handle Resize for Responsive Layout
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // Init
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getCardStyle = (index: number) => {
+    // Calculate the logical offset from the active index
+    const length = mediaItems.length;
+    let offset = (index - activeIndex + length) % length;
+
+    // Fanned Card Stack Logic
+    // Anchor: Bottom Center to create an arc
+    const transformOrigin = 'bottom center';
+
+    // Responsive Config
+    // Mobile: Tighter stack to prevent bleeding off screen
+    // Desktop: Wide expansive fan
+    const xStep = isMobile ? 15 : 60;
+    const rStep = isMobile ? 3 : 8;
+    const startOffset = isMobile ? -35 : 0;
+
+    let zIndex = 0;
+    let opacity = 0;
+    let transform = '';
+    let filter = '';
+    let pointerEvents: 'auto' | 'none' = 'none';
+
+    if (offset === 0) {
+      // Active: Front
+      zIndex = 50;
+      opacity = 1;
+      // Apply startOffset to center the group
+      transform = `translateX(${startOffset}px) rotate(0deg) scale(1)`;
+      filter = 'brightness(1.1)';
+      pointerEvents = 'auto';
+    } else if (offset <= 3) {
+      // Fanned cards behind
+      zIndex = 50 - offset;
+
+      const rotate = offset * rStep;
+      // Add startOffset to the fan steps
+      const tx = startOffset + (offset * xStep);
+      const scale = 1 - (offset * 0.05);
+
+      transform = `translateX(${tx}px) rotate(${rotate}deg) scale(${scale})`;
+      opacity = 1 - (offset * 0.15);
+      filter = `blur(${offset * 1}px) brightness(${1 - offset * 0.1})`;
+    } else {
+      // Hidden
+      zIndex = 0;
+      opacity = 0;
+      transform = 'translateX(50px) rotate(10deg) scale(0.5)';
+    }
+
+    return {
+      zIndex,
+      opacity,
+      transform,
+      transformOrigin,
+      filter,
+      pointerEvents,
+      transition: 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
+    } as React.CSSProperties;
+  };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="absolute inset-0 opacity-30">
+    <section className="relative min-h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Background Decorative Elements */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       <div
         ref={ref}
-        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 grid lg:grid-cols-2 gap-12 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-16 md:pt-48 md:pb-24 lg:pt-52 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
       >
-        <div className="text-center lg:text-left">
+        {/* Left Content Column */}
+        <div className="text-center lg:text-left z-20">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-text leading-tight mb-6">
             From Nature.{' '}
             <br />
@@ -40,32 +181,61 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative">
-          <div className="relative aspect-[3/4] max-w-md mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/20 rounded-3xl blur-2xl" />
-            <video
-              poster="/images/video_02_poster.jpg"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="relative z-10 w-full h-full object-cover rounded-3xl shadow-2xl"
-            >
-              <source src="/images/video_02_av1.webm" type="video/webm" />
-              <source src="/images/video_02.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+        {/* Right Carousel Column */}
+        <div className="relative h-[450px] lg:h-[600px] flex items-center justify-center lg:justify-center" style={{ perspective: '2000px' }}>
+          <div className="relative w-full max-w-md aspect-[4/5]">
+            {mediaItems.map((item, index) => (
+              <div
+                key={index}
+                className="absolute inset-0 w-full h-full"
+                style={getCardStyle(index)}
+              >
+                <div className="w-full h-full bg-surface-muted rounded-3xl overflow-hidden shadow-[0_30px_60px_-12px_rgba(0,0,0,0.35)] border border-white/20 relative group">
+                  {/* Glossy Overlay */}
+                  <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent z-10 pointer-events-none" />
+
+                  {item.type === 'video' ? (
+                    <video
+                      ref={(el) => { if (el) videoRefs.current[index] = el; }}
+                      poster={item.poster}
+                      className={`w-full h-full object-cover ${item.className || ''}`}
+                      style={item.style}
+                      muted
+                      playsInline
+                      loop
+                    >
+                      {item.sources?.map((source, idx) => (
+                        <source key={idx} src={source.src} type={source.type} />
+                      ))}
+                    </video>
+                  ) : (
+                    <img
+                      src={item.src}
+                      alt={`Slide ${index + 1}`}
+                      className={`w-full h-full object-cover ${item.className || ''}`}
+                      style={item.style}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* Pagination Dots */}
+            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-3 z-50 py-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+              {mediaItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveIndex(index)}
+                  className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${index === activeIndex
+                    ? 'w-8 bg-secondary shadow-[0_0_10px_rgba(214,135,57,0.5)]'
+                    : 'w-2 bg-secondary/30 hover:bg-secondary/50'
+                    }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <Link to="/#benefits" className="text-text-muted hover:text-secondary transition-colors">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </Link>
       </div>
     </section>
   );

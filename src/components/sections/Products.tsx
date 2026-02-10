@@ -1,56 +1,10 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
+import { products } from '../../data/products';
+import type { Product } from '../../types/shop';
 
-const products = [
-  {
-    id: 'refreshing',
-    title: 'Refreshing Soap',
-    description: 'A traditional tallow-based bar infused with rosemary for a deeply moisturizing, refreshing cleanse.',
-    image: '/images/refreshing.jpg',
-    price: '420 KES',
-    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive oil', 'Castor Oil', 'Rosemary', 'Essential Oils'],
-    badge: 'Bestseller',
-  },
-  {
-    id: 'turmeric',
-    title: 'Turmeric Soap',
-    description: 'A healing tallow bar enriched with turmeric to naturally brighten skin and restore its natural glow.',
-    image: '/images/turmeric.jpg',
-    price: '420 KES',
-    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Turmeric', 'Essential Oils'],
-    badge: 'Premium',
-  },
-  {
-    id: 'detox',
-    title: 'Detox Soap',
-    description: 'Purifying activated charcoal meets the richness of beef tallow to clear impurities without stripping the skin.',
-    image: '/images/detox.jpg',
-    price: '420 KES',
-    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Activated Charcoal', 'Essential Oils'],
-    badge: null,
-  },
-  {
-    id: 'exfoliant',
-    title: 'Exfoliant Soap',
-    description: 'Creamy goat milk and real coffee grounds combine to gently buff away dead skin while providing intense nourishment.',
-    image: '/images/exfoliant.jpg',
-    price: '420 KES',
-    ingredients: ['Goat Milk', 'Coffee grounds', 'Essential Oils'],
-    badge: null,
-  },
-  {
-    id: 'soap-saver',
-    title: 'Soap Saver/ Exfoliation Bag',
-    description: 'Extend the life of your soap bars while gently exfoliating your skin. Perfect for using up soap remnants and creating a luxurious lather.',
-    image: '/images/soap_saver.jpg',
-    price: '200 KES',
-    ingredients: ['Natural Sisal Fiber'],
-    badge: null,
-  },
-];
-
-function ProductCard({ product, index, isVisible }: { product: any, index: number, isVisible: boolean }) {
+function ProductCard({ product, index, isVisible }: { product: Product, index: number, isVisible: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -60,7 +14,7 @@ function ProductCard({ product, index, isVisible }: { product: any, index: numbe
         }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <div className="relative aspect-square overflow-hidden">
+      <div className="relative aspect-square overflow-hidden bg-white">
         {product.badge && (
           <span className="absolute top-4 left-4 z-10 bg-primary text-text text-xs font-semibold px-3 py-1 rounded-full">
             {product.badge}
@@ -76,7 +30,7 @@ function ProductCard({ product, index, isVisible }: { product: any, index: numbe
       <div className="p-6 flex flex-col flex-1">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-text">{product.title}</h3>
-          <span className="text-secondary font-bold">{product.price}</span>
+          <span className="text-secondary font-bold whitespace-nowrap">KES {product.price.toLocaleString()}</span>
         </div>
 
         <div className="relative mb-4">
@@ -92,13 +46,17 @@ function ProductCard({ product, index, isVisible }: { product: any, index: numbe
         </div>
 
         <div className="flex flex-wrap gap-1 mb-6">
-          {product.ingredients.map((ing: string) => (
+          {product.ingredients?.map((ing: string) => (
             <span key={ing} className="text-xs bg-background px-2 py-1 rounded-full text-text-muted">
               {ing}
             </span>
           ))}
         </div>
-        <Button variant="secondary" size="sm" className="w-full mt-auto">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="w-full mt-auto"
+        >
           Add to Cart
         </Button>
       </div>
@@ -110,7 +68,7 @@ export function Products() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="products" className="py-32 bg-surface">
+    <section id="products" className="pt-40 pb-32 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
