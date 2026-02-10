@@ -5,6 +5,8 @@ import { Footer } from './components/layout/Footer';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { ScrollToTop } from './components/utils/ScrollToTop';
 
+import { SmoothScroll } from './components/utils/SmoothScroll';
+
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
@@ -12,6 +14,7 @@ const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.N
 function App() {
   return (
     <Router>
+      <SmoothScroll />
       <ScrollToTop />
       <SpeedInsights />
       <Navbar />
