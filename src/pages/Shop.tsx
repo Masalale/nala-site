@@ -1,15 +1,37 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Products } from '../components/sections/Products';
 import { CartDrawer } from '../components/shop/CartDrawer';
 import { useCart } from '../context/CartContext';
+import { getOrderByRef } from '../lib/supabase';
 
 export function Shop() {
-    const { setIsCartOpen, itemCount } = useCart();
+    const { setIsCartOpen, itemCount, addToCart, clearCart } = useCart();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Handle Reorder Logic
+    useEffect(() => {
+        const reorderRef = searchParams.get('reorder');
+        if (reorderRef) {
+            getOrderByRef(reorderRef).then(order => {
+                if (order && order.items.length > 0) {
+                    clearCart();
+                    order.items.forEach(item => {
+                        addToCart(item, item.quantity);
+                    });
+                    setIsCartOpen(true);
+                    // Remove param to prevent re-triggering on refresh
+                    setSearchParams({}, { replace: true });
+                }
+            });
+        }
+    }, [searchParams, addToCart, clearCart, setIsCartOpen, setSearchParams]);
 
     return (
         <div className="pt-32">
             <CartDrawer />
             <Products />
-            
+
             <button
                 onClick={() => setIsCartOpen(true)}
                 className="fixed bottom-8 right-8 z-40 bg-secondary text-white p-4 rounded-full shadow-lg hover:bg-secondary/90 transition-all"

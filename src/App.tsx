@@ -12,10 +12,13 @@ const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })))
 const Invoice = lazy(() => import('./pages/Invoice').then(m => ({ default: m.Invoice })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 
+import { Toaster } from 'sonner';
+
 function App() {
   return (
     <Router>
       <CartProvider>
+        <Toaster position="top-center" richColors />
         <Routes>
           {/* Invoice Route - completely standalone (no navbar/footer/smoothscroll) */}
           <Route path="/invoice" element={

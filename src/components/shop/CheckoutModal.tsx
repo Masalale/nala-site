@@ -51,7 +51,25 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     );
 
     if (savedOrder) {
-      const message = `Hi Nala! I'd like to place an order.\n\nOrder #: ${publicRef}\nTotal: KES ${savedOrder.total.toLocaleString()}\nName: ${sanitizedName}\nPhone: ${sanitizedPhone}\n\nView invoice: ${invoiceUrl}`;
+      // Format items string
+      const itemsList = items.map(item =>
+        `*${item.quantity}x* ${item.title} KES ${item.price.toLocaleString()}`
+      ).join('\n');
+
+      // Construct the exact message pattern requested
+      const message = `Hi Nala! 
+I'd like to place an order.
+
+*#${publicRef}* 
+
+${itemsList}
+
+Item total: KES ${savedOrder.total.toLocaleString()} (Qty: ${items.reduce((acc, item) => acc + item.quantity, 0)})
+*Total : KES ${savedOrder.total.toLocaleString()}*
+
+Customer: *${sanitizedName}* ${sanitizedPhone} 
+
+See invoice ${invoiceUrl}`;
 
       window.open(`https://wa.me/254702255299?text=${encodeURIComponent(message)}`, '_blank');
       clearCart();
