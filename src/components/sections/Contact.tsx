@@ -22,7 +22,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-background">
+    <section id="contact" className="py-12 md:py-24 bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
@@ -32,14 +32,14 @@ export function Contact() {
 
 
           {submitted ? (
-            <div className="text-center bg-secondary/10 p-8 rounded-3xl">
+            <div className="text-center bg-secondary/10 p-6 md:p-8 rounded-3xl">
               <div className="text-4xl mb-4">✓</div>
               <h3 className="text-xl font-semibold text-text mb-2">Message Sent!</h3>
               <p className="text-text-muted">We'll get back to you within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-surface p-8 rounded-3xl shadow-sm">
-              <div className="grid gap-6">
+            <form onSubmit={handleSubmit} className="bg-surface p-6 md:p-8 rounded-3xl shadow-sm">
+              <div className="grid gap-4 md:gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-text mb-2">
                     Name *
@@ -52,7 +52,7 @@ export function Contact() {
                     onChange={handleChange}
                     required
                     maxLength={100}
-                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
+                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow text-base"
                   />
                 </div>
 
@@ -69,7 +69,7 @@ export function Contact() {
                     placeholder="+254"
                     required
                     maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
+                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow text-base"
                   />
                 </div>
 
@@ -84,7 +84,7 @@ export function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     maxLength={100}
-                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
+                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow text-base"
                   />
                 </div>
 
@@ -100,7 +100,7 @@ export function Contact() {
                     rows={4}
                     required
                     maxLength={1000}
-                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-shadow resize-none text-base"
                   />
                 </div>
 
@@ -117,7 +117,7 @@ export function Contact() {
               href="https://wa.me/254702255299"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-medium transition-colors"
+              className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-medium transition-colors p-2"
             >
               <span>💬</span>
               Chat on WhatsApp

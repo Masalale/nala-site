@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
 
@@ -26,14 +27,16 @@ export function Story() {
               <p>
                 Each bar is made in small batches, cured patiently, and formulated to serve a purpose—whether that’s calming sensitive skin, cleansing deeply, or restoring balance.
               </p>
-              <p className="font-medium text-text">
+              <p className="font-medium text-text italic">
                 Nature’s Lather isn’t about trends. It’s about returning to what works and doing it well.
               </p>
             </div>
             <div className="mt-8 flex justify-center lg:justify-start">
-              <Button variant="secondary" size="lg">
-                Shop Our Collection
-              </Button>
+              <Link to="/shop">
+                <Button variant="secondary" size="lg">
+                  Shop Our Collection
+                </Button>
+              </Link>
             </div>
           </div>
 

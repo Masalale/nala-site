@@ -16,34 +16,34 @@ export function Newsletter() {
   };
 
   return (
-    <section className="py-16 bg-surface">
+    <section className="py-12 md:py-16 bg-surface">
       <div
         ref={ref}
         className={`max-w-2xl mx-auto px-4 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
       >
-        <h3 className="text-2xl sm:text-3xl font-bold text-text mb-4">
+        <h3 className="text-2xl sm:text-3xl font-bold text-text mb-3 md:mb-4">
           Join the NALA Community
         </h3>
-        <p className="text-text-muted mb-8">
+        <p className="text-sm md:text-base text-text-muted mb-6 md:mb-8">
           Get skincare tips, new product alerts, and 50/- off your first order
         </p>
 
         {submitted ? (
-          <div className="bg-secondary/10 text-secondary p-4 rounded-full font-medium">
+          <div className="bg-secondary/10 text-secondary p-4 rounded-full font-medium text-sm md:text-base">
             Thank you for subscribing! Check your email for your discount code.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-md mx-auto">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="flex-1 px-6 py-3 rounded-full border border-secondary/30 bg-surface focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
+              className="flex-1 px-6 py-3 rounded-full border border-secondary/30 bg-surface focus:outline-none focus:ring-2 focus:ring-primary transition-shadow text-sm md:text-base"
               required
             />
-            <Button type="submit" variant="secondary" size="md">
+            <Button type="submit" variant="secondary" size="md" className="w-full sm:w-auto">
               Subscribe
             </Button>
           </form>

@@ -8,21 +8,21 @@ export function CTABanner() {
   return (
     <section
       ref={ref}
-      className={`py-24 bg-gradient-to-br from-secondary to-primary transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'
+      className={`py-12 md:py-24 bg-gradient-to-br from-secondary to-primary transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'
         }`}
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+        <h2 className="text-3xl sm:text-5xl font-bold text-white mb-4 md:mb-6">
           Ready to Make the Switch to Natural?
         </h2>
-        <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-white/80 mb-6 md:mb-8 max-w-2xl mx-auto">
           Join hundreds of Kenyans who've discovered the NALA difference. Free delivery on orders over 3,000 KES!
         </p>
         <Link to="/shop">
           <Button
             variant="primary"
             size="lg"
-            className="shadow-xl hover:shadow-2xl"
+            className="shadow-xl hover:shadow-2xl w-full sm:w-auto"
           >
             Shop Collection
           </Button>

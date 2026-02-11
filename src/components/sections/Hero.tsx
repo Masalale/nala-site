@@ -64,7 +64,7 @@ export function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % mediaItems.length);
-    }, 15000);
+    }, 10000);
     return () => clearInterval(timer);
   }, [activeIndex]);
 

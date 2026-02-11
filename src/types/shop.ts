@@ -21,17 +21,27 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface CustomerDetails {
+export type CustomerDetails = {
   name: string;
   phone: string;
-  location: string;
-  email?: string;
 }
 
-export interface Order {
+export type Order = {
   id: string;
+  public_ref: string;
+  customer_name: string;
+  customer_phone: string;
   items: CartItem[];
   total: number;
-  date: string;
-  customer: CustomerDetails;
+  link: string;
+  created_at: string;
+}
+
+export type OrderInsert = {
+  public_ref: string;
+  customer_name: string;
+  customer_phone: string;
+  items: CartItem[];
+  total: number;
+  link: string;
 }

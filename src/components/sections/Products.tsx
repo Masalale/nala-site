@@ -3,9 +3,12 @@ import { useLocation } from 'react-router-dom';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
 import { products } from '../../data/products';
+import { useCart } from '../../context/CartContext';
 import type { Product } from '../../types/shop';
 
 function ProductModal({ product, onClose }: { product: Product, onClose: () => void }) {
+  const { addToCart } = useCart();
+
   // Prevent body scroll when modal is open
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -23,7 +26,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
       />
 
       {/* Modal Content - Horizontal "Media Card" Layout" */}
-      <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 ring-1 ring-black/5">
+      <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-scale ring-1 ring-black/5">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -76,6 +79,10 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
             variant="secondary"
             size="sm"
             className="w-full py-2.5 rounded-xl text-sm shadow-md shadow-secondary/20"
+            onClick={() => {
+              addToCart(product);
+              onClose();
+            }}
           >
             Add to Cart
           </Button>
@@ -86,6 +93,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
 }
 
 function ProductCard({ product, index, isVisible, onOpen }: { product: Product, index: number, isVisible: boolean, onOpen: () => void }) {
+  const { addToCart } = useCart();
   return (
     <div
       key={product.id}
@@ -146,6 +154,7 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
           variant="secondary"
           size="sm"
           className="w-full mt-auto text-xs md:text-sm py-2 md:py-2.5 h-auto md:h-10"
+          onClick={() => addToCart(product)}
         >
           Add to Cart
         </Button>

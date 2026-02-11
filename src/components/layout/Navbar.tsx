@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { lenisRef } from '../utils/SmoothScroll';
+
+
+
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,6 +25,11 @@ export function Navbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   // Nav items ordered to match page section flow
   const navItems = [
     { label: 'Why NALA', href: '/#benefits' },
@@ -32,12 +41,12 @@ export function Navbar() {
   const handleLinkClick = (href: string) => {
     setIsMobileMenuOpen(false);
     if (href === '/' && location.pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lenisRef.current?.scrollTo(0);
     } else if (href.startsWith('/#') && location.pathname === '/') {
       const id = href.substring(2);
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        lenisRef.current?.scrollTo(element);
       }
     }
   };
