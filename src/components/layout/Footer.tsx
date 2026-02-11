@@ -1,50 +1,13 @@
 import { Link } from 'react-router-dom';
 
 export function Footer() {
-  const columns = [
-    {
-      title: 'Shop',
-      links: [
-        { label: 'All Products', href: '/shop' },
-        { label: 'Refreshing Soap', href: '/shop' },
-        { label: 'Turmeric Soap', href: '/shop' },
-        { label: 'Detox Soap', href: '/shop' },
-        { label: 'Exfoliant Soap', href: '/shop' },
-      ],
-    },
-    {
-      title: 'About',
-      links: [
-        { label: 'Our Story', href: '/#story' },
-        { label: 'Why NALA', href: '/#benefits' },
-        { label: 'Ingredients', href: '#' },
-        { label: 'Our Process', href: '#' },
-      ],
-    },
-    {
-      title: 'Support',
-      links: [
-        { label: 'FAQ', href: '/#faq' },
-        { label: 'Shipping & Delivery', href: '#' },
-        { label: 'Returns Policy', href: '#' },
-        { label: 'Contact Us', href: '/#contact' },
-      ],
-    },
-    {
-      title: 'Connect',
-      links: [
-        { label: 'Instagram', href: 'https://instagram.com/natureslather.ke' },
-        { label: 'Facebook', href: 'https://facebook.com/natureslatherke' },
-        { label: 'WhatsApp', href: 'https://wa.me/254702255299' },
-      ],
-    },
-  ];
+
 
   return (
     <footer className="bg-text text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-2">
             <Link to="/" className="inline-block">
               <img
                 src="/images/plainbg_logo.png"
@@ -58,38 +21,56 @@ export function Footer() {
               Take care of your skin. It’s the only place you live in.
             </p>
             <p className="text-white/40 text-xs italic">
-               From Nature. For Skin.
+              From Nature. For Skin.
             </p>
           </div>
 
-          {columns.map((column) => (
-            <div key={column.title}>
-              <h4 className="font-semibold mb-4">{column.title}</h4>
-              <ul className="space-y-2">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    {link.href.startsWith('http') ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white/60 hover:text-primary transition-colors text-sm"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        to={link.href}
-                        className="text-white/60 hover:text-primary transition-colors text-sm"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Shop Column */}
+          <div>
+            <h4 className="font-semibold mb-4">Shop</h4>
+            <ul className="space-y-2">
+              <li><Link to="/shop" className="text-white/60 hover:text-primary transition-colors text-sm">All Products</Link></li>
+              <li><Link to="/shop?product=refreshing" className="text-white/60 hover:text-primary transition-colors text-sm">Refreshing Soap</Link></li>
+              <li><Link to="/shop?product=turmeric" className="text-white/60 hover:text-primary transition-colors text-sm">Turmeric Soap</Link></li>
+              <li><Link to="/shop?product=detox" className="text-white/60 hover:text-primary transition-colors text-sm">Detox Soap</Link></li>
+              <li><Link to="/shop?product=exfoliant" className="text-white/60 hover:text-primary transition-colors text-sm">Exfoliant Soap</Link></li>
+              <li><Link to="/shop?product=gentle-red" className="text-white/60 hover:text-primary transition-colors text-sm">Gentle Red Soap</Link></li>
+              <li><Link to="/shop?product=soap-saver" className="text-white/60 hover:text-primary transition-colors text-sm">Soap Saver</Link></li>
+            </ul>
+          </div>
+
+          {/* About Column */}
+          <div>
+            <h4 className="font-semibold mb-4">About</h4>
+            <ul className="space-y-2">
+              <li><Link to="/#story" className="text-white/60 hover:text-primary transition-colors text-sm">Our Story</Link></li>
+              <li><Link to="/#benefits" className="text-white/60 hover:text-primary transition-colors text-sm">Why NALA</Link></li>
+              <li><Link to="/shop" className="text-white/60 hover:text-primary transition-colors text-sm">Ingredients</Link></li>
+              <li><Link to="/#process" className="text-white/60 hover:text-primary transition-colors text-sm">Our Process</Link></li>
+            </ul>
+          </div>
+
+          {/* Support & Connect Column */}
+          <div>
+            <h4 className="font-semibold mb-4">Support</h4>
+            <ul className="space-y-2 mb-8">
+              <li><Link to="/#faq" className="text-white/60 hover:text-primary transition-colors text-sm">FAQ</Link></li>
+            </ul>
+
+            <h4 className="font-semibold mb-4">Connect</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="https://www.instagram.com/natures_lather/" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors text-sm">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/254702255299" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors text-sm">
+                  WhatsApp
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">

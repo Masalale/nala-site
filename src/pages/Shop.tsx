@@ -2,7 +2,7 @@ import { Products } from '../components/sections/Products';
 
 export function Shop() {
     return (
-        <div>
+        <div className="pt-32">
             <Products />
 
             {/* Ingredients & Philosophy Section */}

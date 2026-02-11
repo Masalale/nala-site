@@ -13,6 +13,7 @@ interface MediaItem {
   sources?: MediaSource[]; // For video
   src?: string; // For image, or fallback
   poster?: string;
+  alt: string; // Alt text for image or video poster
   className?: string; // For Tailwind classes like object-position
   style?: React.CSSProperties; // For inline styles like transform
 }
@@ -24,7 +25,8 @@ const mediaItems: MediaItem[] = [
       { src: '/videos/model_av1.webm', type: 'video/webm' },
       { src: '/videos/model.mp4', type: 'video/mp4' }
     ],
-    poster: '/videos/model_poster.jpg'
+    poster: '/images/model_poster.jpg',
+    alt: "Model using Nature's Lather soap"
   },
   {
     type: 'video',
@@ -32,18 +34,21 @@ const mediaItems: MediaItem[] = [
       { src: '/videos/intro_av1.webm', type: 'video/webm' },
       { src: '/videos/intro.mp4', type: 'video/mp4' }
     ],
-    poster: '/videos/intro_poster.jpg',
+    poster: '/images/intro_poster.jpg',
+    alt: "Introduction to Nature's Lather products",
     className: 'object-bottom' // Align to bottom to show text
   },
   {
     type: 'image',
     src: '/images/collection.jpeg',
+    alt: "Full collection of Nature's Lather soaps",
     className: 'object-cover object-center w-full',
     style: { height: '115%', marginTop: '-18%' }
   },
   {
     type: 'image',
     src: '/images/stamp.jpeg',
+    alt: "Nature's Lather soap with embossed stamp",
     className: 'object-cover object-center w-full',
     style: { height: '115%', marginTop: '-7.5%' }
   },
@@ -154,7 +159,7 @@ export function Hero() {
 
       <div
         ref={ref}
-        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-16 md:pt-48 md:pb-24 lg:pt-52 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 pb-16 md:pt-56 md:pb-24 lg:pt-64 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
       >
         {/* Left Content Column */}
@@ -211,7 +216,7 @@ export function Hero() {
                   ) : (
                     <img
                       src={item.src}
-                      alt={`Slide ${index + 1}`}
+                      alt={item.alt}
                       className={`w-full h-full object-cover ${item.className || ''}`}
                       style={item.style}
                     />
