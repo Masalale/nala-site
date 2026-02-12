@@ -63,7 +63,7 @@ export const products: Product[] = [
     title: 'The Nala Collection',
     description: 'Get all 5 signature soaps plus a wooden soap saver. The ultimate self-care package.',
     image: '/images/collection.jpeg',
-    price: 2102,
+    price: 2100,
     ingredients: ['All 5 Soaps', 'Soap Saver'],
     badge: 'Premium',
     category: 'bundle'
