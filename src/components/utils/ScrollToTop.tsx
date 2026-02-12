@@ -19,7 +19,7 @@ export function ScrollToTop() {
                 if (element) {
                     lenisRef.current?.scrollTo(element);
                 }
-            }, 100);
+            }, 500);
         }
     }, [pathname, hash, search]);
 

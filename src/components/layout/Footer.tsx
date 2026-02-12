@@ -57,7 +57,7 @@ export function Footer() {
               <li><Link to="/#faq" className="text-white/60 hover:text-primary transition-colors text-sm">FAQ</Link></li>
             </ul>
 
-            <h4 className="font-semibold mb-4">Connect</h4>
+            <h4 id="footer-connect" className="font-semibold mb-4 scroll-mt-24">Connect</h4>
             <ul className="space-y-2">
               <li>
                 <a href="https://www.instagram.com/natures_lather/" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors text-sm">

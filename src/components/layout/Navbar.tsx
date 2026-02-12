@@ -35,13 +35,19 @@ export function Navbar() {
     { label: 'Why NALA', href: '/#benefits' },
     { label: 'Shop', href: '/shop' },
     { label: 'Our Story', href: '/#story' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Connect', href: '#footer-connect' },
   ];
 
   const handleLinkClick = (href: string) => {
     setIsMobileMenuOpen(false);
     if (href === '/' && location.pathname === '/') {
       lenisRef.current?.scrollTo(0);
+    } else if (href.startsWith('#')) {
+      const id = href.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        lenisRef.current?.scrollTo(element);
+      }
     } else if (href.startsWith('/#') && location.pathname === '/') {
       const id = href.substring(2);
       const element = document.getElementById(id);
