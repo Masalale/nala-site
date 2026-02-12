@@ -82,6 +82,32 @@ export async function getOrderByRef(publicRef: string): Promise<Order | null> {
   return data as Order;
 }
 
+export async function checkRateLimit(
+  keyId: string,
+  maxRequests: number = 5,
+  windowMinutes: number = 60
+): Promise<{ allowed: boolean; remaining: number; resetTime: Date }> {
+  const windowStart = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .rpc('check_and_increment_rate_limit', {
+      p_key_id: keyId,
+      p_window_start: windowStart,
+      p_max_requests: maxRequests
+    });
+
+  if (error) {
+    console.error('Rate limit check failed:', error);
+    return { allowed: true, remaining: maxRequests, resetTime: new Date(Date.now() + windowMinutes * 60 * 1000) };
+  }
+
+  return {
+    allowed: data.allowed,
+    remaining: data.remaining,
+    resetTime: new Date(data.reset_time)
+  };
+}
+
 /*
  * SECURITY NOTES FOR SUPABASE:
  *

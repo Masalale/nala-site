@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
-import { createOrderWithValidation } from '../../lib/supabase';
+import { createOrderWithValidation, checkRateLimit } from '../../lib/supabase';
 import { generatePublicRef } from '../../utils/hash';
 import { sanitizePhone, sanitizeName, isValidPhone, isValidName } from '../../utils/security';
+import { getClientIp } from '../../utils/ip';
 
 
 interface CheckoutModalProps {
@@ -17,6 +18,24 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [rateLimitRemaining, setRateLimitRemaining] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      checkRateLimitStatus();
+    }
+  }, [isOpen]);
+
+  const checkRateLimitStatus = async () => {
+    try {
+      const ip = await getClientIp();
+      const keyId = `ip:${ip}`;
+      const { remaining } = await checkRateLimit(keyId, 5, 60);
+      setRateLimitRemaining(remaining);
+    } catch {
+      setRateLimitRemaining(null);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -38,6 +57,19 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     }
 
     setLoading(true);
+
+    const ip = await getClientIp();
+    const keyId = `ip:${ip}`;
+    const { allowed, remaining, resetTime } = await checkRateLimit(keyId, 5, 60);
+
+    if (!allowed) {
+      setError(`Rate limit exceeded. Please try again after ${resetTime.toLocaleTimeString()}.`);
+      setLoading(false);
+      setRateLimitRemaining(0);
+      return;
+    }
+
+    setRateLimitRemaining(remaining);
 
     const publicRef = generatePublicRef();
     const origin = window.location.origin;
@@ -102,6 +134,11 @@ See invoice ${invoiceUrl}`;
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <div className="text-red-500 text-sm">{error}</div>
+          )}
+          {rateLimitRemaining !== null && rateLimitRemaining <= 2 && rateLimitRemaining > 0 && (
+            <div className="text-amber-600 text-sm">
+              {rateLimitRemaining} order{rateLimitRemaining !== 1 ? 's' : ''} remaining this hour
+            </div>
           )}
           <div>
             <label className="block text-sm font-medium mb-1">Full Name *</label>
