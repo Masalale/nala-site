@@ -284,7 +284,7 @@ export function Invoice() {
           </div>
           <div className="text-right">
             <p className="text-xs text-text-muted uppercase">Pochi la Biashara</p>
-            <p className="font-mono text-xl font-bold text-secondary">+254 702 255299</p>
+            <p className="font-mono text-base md:text-xl font-bold text-secondary">+254 702 255299</p>
           </div>
         </div>
 

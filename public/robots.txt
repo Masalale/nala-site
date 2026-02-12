@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /checkout
+Disallow: /invoice
+Disallow: /account
+Disallow: /admin
+
+# Sitemap
+Sitemap: https://nalather.netlify.app/sitemap.xml
