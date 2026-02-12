@@ -20,6 +20,13 @@ interface MediaItem {
 
 const mediaItems: MediaItem[] = [
   {
+    type: 'image',
+    src: '/images/gentle_red_valentines.jpeg',
+    alt: "Valentine's Day Special - Gentle Red Soap",
+    className: 'object-cover object-center w-full',
+    style: { height: '115%', marginTop: '-18%' }
+  },
+  {
     type: 'video',
     sources: [
       { src: '/videos/model_av1.webm', type: 'video/webm' },

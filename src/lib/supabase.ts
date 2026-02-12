@@ -4,6 +4,11 @@ import type { Order, OrderInsert } from '../types/shop';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+type CreateOrderValidationResult = {
+  order_id: string | null;
+  validation_errors: string[];
+};
+
 let didWarnMissingEnv = false;
 let supabaseClient: SupabaseClient | null = null;
 
@@ -48,7 +53,8 @@ export async function createOrderWithValidation(
   publicRef: string,
   customerName: string,
   customerPhone: string,
-  items: any[]
+  items: any[],
+  link: string
 ): Promise<{ order: Order | null; error: string | null }> {
   const supabase = getSupabaseClient();
   if (!supabase) {
@@ -63,30 +69,32 @@ export async function createOrderWithValidation(
       p_public_ref: publicRef,
       p_customer_name: customerName,
       p_customer_phone: customerPhone,
-      p_items: items
+      p_items: items,
+      p_link: link
     });
+
+  const result = data as CreateOrderValidationResult | null;
 
   if (error) {
     console.error('Error creating order:', error);
     return { order: null, error: error.message };
   }
 
-  if (data.validation_errors && data.validation_errors.length > 0) {
-    return { order: null, error: data.validation_errors.join(', ') };
+  if (!result) {
+    return { order: null, error: 'Order service returned an empty response' };
   }
 
-  const { data: orderData, error: fetchError } = await supabase
-    .from('orders')
-    .select('*')
-    .eq('id', data.order_id)
-    .single();
+  if (result.validation_errors && result.validation_errors.length > 0) {
+    return { order: null, error: result.validation_errors.join(', ') };
+  }
 
-  if (fetchError) {
-    console.error('Error fetching created order:', fetchError);
+  const orderData = await getOrderByRef(publicRef);
+
+  if (!orderData) {
     return { order: null, error: 'Order created but could not be retrieved' };
   }
 
-  return { order: orderData as Order, error: null };
+  return { order: orderData, error: null };
 }
 
 export async function getOrderByRef(publicRef: string): Promise<Order | null> {
@@ -101,61 +109,29 @@ export async function getOrderByRef(publicRef: string): Promise<Order | null> {
   }
 
   const { data, error } = await supabase
-    .from('orders')
-    .select('*')
-    .eq('public_ref', publicRef)
-    .single();
+    .rpc('get_order_by_public_ref', {
+      p_public_ref: publicRef
+    });
 
   if (error) {
     console.error('Error fetching order:', error);
     return null;
   }
 
-  return data as Order;
-}
-
-export async function checkRateLimit(
-  keyId: string,
-  maxRequests: number = 5,
-  windowMinutes: number = 60
-): Promise<{ allowed: boolean; remaining: number; resetTime: Date }> {
-  const supabase = getSupabaseClient();
-  if (!supabase) {
-    return { allowed: true, remaining: maxRequests, resetTime: new Date(Date.now() + windowMinutes * 60 * 1000) };
-  }
-
-  const windowStart = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
-
-  const { data, error } = await supabase
-    .rpc('check_and_increment_rate_limit', {
-      p_key_id: keyId,
-      p_window_start: windowStart,
-      p_max_requests: maxRequests
-    });
-
-  if (error) {
-    console.error('Rate limit check failed:', error);
-    return { allowed: true, remaining: maxRequests, resetTime: new Date(Date.now() + windowMinutes * 60 * 1000) };
-  }
-
-  return {
-    allowed: data.allowed,
-    remaining: data.remaining,
-    resetTime: new Date(data.reset_time)
-  };
+  return data as Order | null;
 }
 
 /*
  * SECURITY NOTES FOR SUPABASE:
  *
  * 1. Enable Row Level Security (RLS) on the orders table
- * 2. Create a policy that only allows reading orders by public_ref
- * 3. Implement rate limiting using Supabase Edge Functions or a WAF
+ * 2. Use SECURITY DEFINER RPC functions for order writes and reads
+ * 3. Restrict direct table reads from the anon role
  * 4. Consider adding a created_at index for performance
  *
  * Example RLS Policy:
- * CREATE POLICY "Allow public read by ref" ON orders
- * FOR SELECT USING (true);
+ * CREATE POLICY "No direct reads for anon" ON orders
+ * FOR SELECT TO anon USING (false);
  *
  * DO NOT allow UPDATE or DELETE from the client
  */
