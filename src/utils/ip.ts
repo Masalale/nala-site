@@ -1,26 +1,18 @@
-let cachedIp: string | null = null;
-let ipFetchPromise: Promise<string> | null = null;
+let cachedClientKey: string | null = null;
+
+const CLIENT_ID_KEY = 'client_id';
 
 export async function getClientIp(): Promise<string> {
-  if (cachedIp) return cachedIp;
-  if (ipFetchPromise) return ipFetchPromise;
+  if (cachedClientKey) return cachedClientKey;
 
-  ipFetchPromise = fetch('https://api.ipify.org?format=json')
-    .then(res => res.json())
-    .then(data => {
-      cachedIp = data.ip;
-      return data.ip;
-    })
-    .catch(() => {
-      // Fallback to session-based ID if IP fetch fails
-      const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
-      if (!sessionStorage.getItem('session_id')) {
-        sessionStorage.setItem('session_id', sessionId);
-      }
-      return `session:${sessionId}`;
-    });
+  let clientId = localStorage.getItem(CLIENT_ID_KEY);
+  if (!clientId) {
+    clientId = generateSessionId();
+    localStorage.setItem(CLIENT_ID_KEY, clientId);
+  }
 
-  return ipFetchPromise;
+  cachedClientKey = `client:${clientId}`;
+  return cachedClientKey;
 }
 
 function generateSessionId(): string {
@@ -28,6 +20,5 @@ function generateSessionId(): string {
 }
 
 export function clearIpCache(): void {
-  cachedIp = null;
-  ipFetchPromise = null;
+  cachedClientKey = null;
 }

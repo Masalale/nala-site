@@ -1,16 +1,35 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Order, OrderInsert } from '../types/shop';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+let didWarnMissingEnv = false;
+let supabaseClient: SupabaseClient | null = null;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const getSupabaseClient = () => {
+  if (supabaseClient) {
+    return supabaseClient;
+  }
+
+  if (!supabaseUrl || !supabaseKey) {
+    if (!didWarnMissingEnv) {
+      console.warn('Supabase is not configured: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY');
+      didWarnMissingEnv = true;
+    }
+    return null;
+  }
+
+  supabaseClient = createClient(supabaseUrl, supabaseKey);
+  return supabaseClient;
+};
 
 export async function createOrder(order: OrderInsert): Promise<Order | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('orders')
     .insert(order)
@@ -31,6 +50,14 @@ export async function createOrderWithValidation(
   customerPhone: string,
   items: any[]
 ): Promise<{ order: Order | null; error: string | null }> {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return {
+      order: null,
+      error: 'Order service is temporarily unavailable. Please try again later.'
+    };
+  }
+
   const { data, error } = await supabase
     .rpc('create_order_with_validation', {
       p_public_ref: publicRef,
@@ -63,6 +90,11 @@ export async function createOrderWithValidation(
 }
 
 export async function getOrderByRef(publicRef: string): Promise<Order | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
   if (publicRef.length !== 8) {
     console.error('Invalid reference format');
     return null;
@@ -87,6 +119,11 @@ export async function checkRateLimit(
   maxRequests: number = 5,
   windowMinutes: number = 60
 ): Promise<{ allowed: boolean; remaining: number; resetTime: Date }> {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return { allowed: true, remaining: maxRequests, resetTime: new Date(Date.now() + windowMinutes * 60 * 1000) };
+  }
+
   const windowStart = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
