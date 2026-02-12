@@ -13,7 +13,7 @@ export function Invoice() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [generatingDownload, setGeneratingDownload] = useState(false);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
 
   const ref = searchParams.get('ref');
@@ -38,42 +38,97 @@ export function Invoice() {
     });
   }, [ref]);
 
-  // ... (imports remain the same, just adding toast)
-
   const handleDownload = async (format: 'pdf' | 'image') => {
     if (!invoiceRef.current) return;
-    setGeneratingPdf(true);
+    setGeneratingDownload(true);
 
     try {
-      const canvas = await html2canvas(invoiceRef.current, {
-        scale: 2,
-        logging: false,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        scrollY: -window.scrollY, // Fix for scroll issue
-        windowWidth: document.documentElement.offsetWidth,
-        windowHeight: document.documentElement.offsetHeight
-      });
+      await document.fonts.ready;
 
-      const imgData = canvas.toDataURL('image/png');
+      const sourceNode = invoiceRef.current;
+      const cloneWrapper = document.createElement('div');
+      cloneWrapper.style.position = 'fixed';
+      cloneWrapper.style.left = '-10000px';
+      cloneWrapper.style.top = '0';
+      cloneWrapper.style.zIndex = '-1';
+      cloneWrapper.style.background = '#ffffff';
+      cloneWrapper.style.padding = '0';
+      cloneWrapper.style.margin = '0';
+
+      const cloneNode = sourceNode.cloneNode(true) as HTMLDivElement;
+      cloneNode.style.width = `${sourceNode.offsetWidth}px`;
+      cloneNode.style.maxWidth = `${sourceNode.offsetWidth}px`;
+      cloneNode.style.margin = '0';
+      cloneNode.style.borderRadius = '0';
+      cloneNode.style.boxShadow = 'none';
+
+      cloneWrapper.appendChild(cloneNode);
+      document.body.appendChild(cloneWrapper);
+
+      let canvas: HTMLCanvasElement;
+
+      try {
+        canvas = await html2canvas(cloneNode, {
+          scale: Math.min(window.devicePixelRatio || 1, 2),
+          logging: false,
+          foreignObjectRendering: false,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: '#ffffff',
+          width: cloneNode.scrollWidth,
+          height: cloneNode.scrollHeight,
+          windowWidth: cloneNode.scrollWidth,
+          windowHeight: cloneNode.scrollHeight
+        });
+      } finally {
+        cloneWrapper.remove();
+      }
+
+      const fileName = `Invoice_${order?.public_ref}`;
 
       if (format === 'image') {
+        const blob = await new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((generatedBlob) => resolve(generatedBlob), 'image/png', 1);
+        });
+
+        if (!blob) {
+          throw new Error('Failed to generate image blob');
+        }
+
+        const downloadUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = imgData;
-        link.download = `Invoice_${order?.public_ref}.png`;
+        link.href = downloadUrl;
+        link.download = `${fileName}.png`;
+        document.body.appendChild(link);
         link.click();
+        link.remove();
+        URL.revokeObjectURL(downloadUrl);
       } else {
+        const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
           format: 'a4'
         });
 
-        const imgWidth = 210;
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.save(`Invoice_${order?.public_ref}.pdf`);
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+          heightLeft -= pageHeight;
+        }
+
+        pdf.save(`${fileName}.pdf`);
       }
 
       toast.success(`Invoice downloaded as ${format.toUpperCase()}`);
@@ -81,7 +136,7 @@ export function Invoice() {
       console.error('Error creating file:', err);
       toast.error('Failed to generate invoice file');
     } finally {
-      setGeneratingPdf(false);
+      setGeneratingDownload(false);
       setShowDownloadOptions(false);
     }
   };
@@ -91,12 +146,6 @@ export function Invoice() {
       const url = `${window.location.origin}/shop?reorder=${order.public_ref}`;
       window.open(url, '_blank');
     }
-  };
-
-  const handleEmailInvoice = () => {
-    toast.info('Email feature coming soon!', {
-      description: 'We won\'t charge you for this update 😉'
-    });
   };
 
   // Date formatter
@@ -141,11 +190,11 @@ export function Invoice() {
           <div className="relative" onClick={e => e.stopPropagation()}>
             <button
               onClick={() => setShowDownloadOptions(!showDownloadOptions)}
-              disabled={generatingPdf}
+              disabled={generatingDownload}
               className="p-2 text-text-muted hover:text-primary transition-colors rounded-full hover:bg-white/50 disabled:opacity-50"
               title="Download"
             >
-              {generatingPdf ? (
+              {generatingDownload ? (
                 <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               ) : (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +238,7 @@ export function Invoice() {
             <p className="text-text-muted">+254 702 255299</p>
           </div>
           <div className="text-right">
-            <h2 className="text-4xl font-bold text-secondary/20 mb-1">INVOICE</h2>
+            <h2 className="text-4xl font-bold text-secondary opacity-20 mb-1">INVOICE</h2>
             <p className="font-mono text-lg text-text-muted">No : {order.public_ref}</p>
             <p className="text-sm text-text-muted mt-1">{formatDate(order.created_at)}</p>
           </div>
@@ -228,7 +277,7 @@ export function Invoice() {
           </tfoot>
         </table>
 
-        <div className="bg-surface/50 rounded-xl p-6 flex justify-between items-center print:bg-gray-50">
+        <div className="bg-surface rounded-xl p-6 flex justify-between items-center print:bg-gray-50">
           <div>
             <h4 className="font-bold">Payment Details</h4>
             <p className="text-sm text-text-muted">Complete payment via M-Pesa</p>
@@ -240,10 +289,7 @@ export function Invoice() {
         </div>
 
         {/* Action Buttons (Hidden in Print/PDF) */}
-        <div className="mt-8 grid grid-cols-2 gap-4 print:hidden" data-html2canvas-ignore>
-          <Button variant="outline" onClick={handleEmailInvoice} className="w-full">
-            Email Invoice
-          </Button>
+        <div className="mt-8 print:hidden" data-html2canvas-ignore>
           <Button variant="primary" onClick={handleOrderAgain} className="w-full">
             Order Again
           </Button>

@@ -70,7 +70,7 @@ Item total: KES ${savedOrder.total.toLocaleString()} (Qty: ${items.reduce((acc, 
 
 Customer: *${sanitizedName}* ${sanitizedPhone} 
 
-See invoice ${invoiceUrl}`;
+See Invoice: ${invoiceUrl}`;
 
       window.open(`https://wa.me/254702255299?text=${encodeURIComponent(message)}`, '_blank');
       clearCart();
@@ -118,7 +118,7 @@ See invoice ${invoiceUrl}`;
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Phone Number *</label>
+            <label className="block text-sm font-medium mb-1">Whatsapp Number *</label>
             <input
               type="tel"
               required

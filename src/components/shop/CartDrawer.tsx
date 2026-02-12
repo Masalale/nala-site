@@ -18,8 +18,8 @@ export function CartDrawer() {
     <>
       <div className="fixed inset-0 z-50 flex justify-end">
         <div className="absolute inset-0 bg-black/50" onClick={() => setIsCartOpen(false)} />
-        
-        <div className="relative z-10 w-full max-w-md bg-white shadow-xl flex flex-col h-full">
+
+        <div className="relative z-10 w-full md:max-w-md bg-white shadow-xl flex flex-col h-full">
           <div className="p-6 border-b flex justify-between items-center">
             <h2 className="text-xl font-bold">Your Cart ({items.length})</h2>
             <button
