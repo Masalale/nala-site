@@ -8,24 +8,42 @@ export function sanitizeInput(input: string, maxLength: number = 100): string {
 }
 
 export function sanitizePhone(phone: string): string {
-  return phone
-    .trim()
-    .replace(/[^\d+\-() ]/g, '')
-    .slice(0, 20)
+  // Keep only digits and leading +
+  return phone.replace(/[^\d+]/g, '').replace(/(?!^)\+/g, '');
 }
 
 export function sanitizeName(name: string): string {
+  // Allow letters, spaces, apostrophes, dots, and hyphens. No numbers or other symbols.
   return name
-    .trim()
-    .slice(0, 100)
-    .replace(/[<>'"&\\]/g, '')
+    .replace(/[^a-zA-Z\s'.\-]/g, '')
+    .slice(0, 100);
 }
 
 export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^[\d+\-() ]{7,20}$/
-  return phoneRegex.test(phone)
+  // Kenyan Phone Number Regex
+  // Prefixes: 07..., 01..., 254..., +254...
+  // ISP Codes:
+  // Safaricom: 070, 071, 072, 0740-0743, 0745, 0746, 0748, 0757-0759, 0768, 0769, 079, 0110-0115
+  // Airtel: 073, 0750-0756, 078, 010
+  // Telkom: 077, 020
+  // Faiba: 0747
+
+  // Regex breakdown:
+  // ^(?:254|\+254|0)? - Optional prefix
+  // (
+  //   7(?:0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-35-8]|5[0-9]|6[89]|7[0-9]|8[0-9]|9[0-9]) - 7 series
+  //   |
+  //   1(?:0[0-2]|1[0-5]) - 1 series (010, 011)
+  //   |
+  //   20[0-9] - 2 series (020)
+  // )
+  // [0-9]{6}$ - Remaining 6 digits
+
+  const kenyanPhoneRegex = /^(?:254|\+254|0)?((?:7(?:0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-35-8]|5[0-9]|6[89]|7[0-9]|8[0-9]|9[0-9])|1(?:0[0-2]|1[0-5])|20[0-9])[0-9]{6})$/;
+  return kenyanPhoneRegex.test(phone);
 }
 
 export function isValidName(name: string): boolean {
-  return name.length >= 2 && name.length <= 100
+  // Must be at least 2 chars long and contain at least one space (implying two names)
+  return name.trim().length >= 2 && name.trim().includes(' ');
 }

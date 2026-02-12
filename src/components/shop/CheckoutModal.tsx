@@ -28,7 +28,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     const sanitizedPhone = sanitizePhone(phone);
 
     if (!isValidName(sanitizedName)) {
-      setError('Please enter a valid name');
+      setError('Please enter your full name (at least two names, letters only)');
       return;
     }
 
@@ -110,11 +110,18 @@ See Invoice: ${invoiceUrl}`;
               type="text"
               required
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => {
+                const val = e.target.value;
+                // Allow only letters, spaces, and specific punctuation
+                if (/^[a-zA-Z\s'.\-]*$/.test(val)) {
+                  setName(val);
+                }
+              }}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary"
               placeholder="John Doe"
-              maxLength={100}
+              maxLength={50}
             />
+            <p className="text-xs text-text-muted mt-1">First and Last name required (no numbers)</p>
           </div>
 
           <div>
@@ -123,11 +130,18 @@ See Invoice: ${invoiceUrl}`;
               type="tel"
               required
               value={phone}
-              onChange={e => setPhone(e.target.value)}
+              onChange={e => {
+                const val = e.target.value;
+                // Allow digits and leading + only
+                if (/^\+?[\d]*$/.test(val)) {
+                  setPhone(val);
+                }
+              }}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary"
               placeholder="0712 345 678"
-              maxLength={20}
+              maxLength={13}
             />
+            <p className="text-xs text-text-muted mt-1">Format: 07..., 01..., 254...</p>
           </div>
 
           <div className="pt-4">
