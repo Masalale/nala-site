@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { Order, OrderInsert } from '../types/shop';
+import type { Order, OrderInsert, CartItem } from '../types/shop';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -53,7 +53,7 @@ export async function createOrderWithValidation(
   publicRef: string,
   customerName: string,
   customerPhone: string,
-  items: any[],
+  items: CartItem[],
   link: string
 ): Promise<{ order: Order | null; error: string | null }> {
   const supabase = getSupabaseClient();

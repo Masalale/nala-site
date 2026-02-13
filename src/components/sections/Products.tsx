@@ -168,12 +168,14 @@ export function Products() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const location = useLocation();
 
+  // Sync UI state with URL params for deep linking
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const productId = params.get('product');
     if (productId) {
       const product = products.find(p => p.id === productId);
       if (product) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncs selected product with URL
         setSelectedProduct(product);
       }
     }

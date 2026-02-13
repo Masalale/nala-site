@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 const testimonials = [
@@ -23,14 +23,29 @@ const testimonials = [
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const { ref, isVisible } = useScrollAnimation();
+  const touchStartX = useRef(0);
 
-  // Auto-advance testimonials
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      } else {
+        setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+      }
+    }
+  };
 
   return (
     <section className="py-12 md:py-24 bg-background overflow-hidden">
@@ -44,8 +59,11 @@ export function Testimonials() {
             Community Love
           </h2>
 
-          <div className="relative bg-surface rounded-3xl p-6 md:p-12 shadow-sm border border-secondary/10">
-            {/* Decorative Quote Icon */}
+          <div
+            className="relative bg-surface rounded-3xl p-6 md:p-12 shadow-sm border border-secondary/10"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="absolute top-4 left-6 md:top-6 md:left-8 text-4xl md:text-6xl text-primary/20 font-serif">"</div>
 
             <div className="min-h-[160px] md:min-h-[180px] flex flex-col items-center justify-center relative z-10">

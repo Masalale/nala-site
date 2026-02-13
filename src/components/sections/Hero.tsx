@@ -10,12 +10,12 @@ interface MediaSource {
 
 interface MediaItem {
   type: 'video' | 'image';
-  sources?: MediaSource[]; // For video
-  src?: string; // For image, or fallback
+  sources?: MediaSource[];
+  src?: string;
   poster?: string;
-  alt: string; // Alt text for image or video poster
-  className?: string; // For Tailwind classes like object-position
-  style?: React.CSSProperties; // For inline styles like transform
+  alt: string;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const mediaItems: MediaItem[] = [
@@ -43,7 +43,7 @@ const mediaItems: MediaItem[] = [
     ],
     poster: '/images/intro_poster.jpg',
     alt: "Introduction to Nature's Lather products",
-    className: 'object-bottom' // Align to bottom to show text
+    className: 'object-bottom'
   },
   {
     type: 'image',
@@ -66,8 +66,8 @@ export function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
 
-  // Auto-advance carousel
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % mediaItems.length);
@@ -75,12 +75,11 @@ export function Hero() {
     return () => clearInterval(timer);
   }, [activeIndex]);
 
-  // Handle video playback
   useEffect(() => {
     videoRefs.current.forEach((video, index) => {
       if (!video) return;
       if (index === activeIndex) {
-        video.play().catch(() => { /* Auto-play prevented */ });
+        video.play().catch(() => { });
       } else {
         video.pause();
         video.currentTime = 0;
@@ -88,26 +87,33 @@ export function Hero() {
     });
   }, [activeIndex]);
 
-  // Handle Resize for Responsive Layout
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize(); // Init
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const getCardStyle = (index: number) => {
-    // Calculate the logical offset from the active index
-    const length = mediaItems.length;
-    let offset = (index - activeIndex + length) % length;
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
 
-    // Fanned Card Stack Logic
-    // Anchor: Bottom Center to create an arc
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        setActiveIndex((prev) => (prev + 1) % mediaItems.length);
+      } else {
+        setActiveIndex((prev) => (prev - 1 + mediaItems.length) % mediaItems.length);
+      }
+    }
+  };
+
+  const getCardStyle = (index: number) => {
+    const length = mediaItems.length;
+    const offset = (index - activeIndex + length) % length;
     const transformOrigin = 'bottom center';
 
-    // Responsive Config
-    // Mobile: Tighter stack to prevent bleeding off screen
-    // Desktop: Wide expansive fan
     const xStep = isMobile ? 15 : 60;
     const rStep = isMobile ? 3 : 8;
     const startOffset = isMobile ? -35 : 0;
@@ -119,27 +125,20 @@ export function Hero() {
     let pointerEvents: 'auto' | 'none' = 'none';
 
     if (offset === 0) {
-      // Active: Front
       zIndex = 50;
       opacity = 1;
-      // Apply startOffset to center the group
       transform = `translateX(${startOffset}px) rotate(0deg) scale(1)`;
       filter = 'brightness(1.1)';
       pointerEvents = 'auto';
     } else if (offset <= 3) {
-      // Fanned cards behind
       zIndex = 50 - offset;
-
       const rotate = offset * rStep;
-      // Add startOffset to the fan steps
       const tx = startOffset + (offset * xStep);
       const scale = 1 - (offset * 0.05);
-
       transform = `translateX(${tx}px) rotate(${rotate}deg) scale(${scale})`;
       opacity = 1 - (offset * 0.15);
       filter = `blur(${offset * 1}px) brightness(${1 - offset * 0.1})`;
     } else {
-      // Hidden
       zIndex = 0;
       opacity = 0;
       transform = 'translateX(50px) rotate(10deg) scale(0.5)';
@@ -158,7 +157,6 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Background Decorative Elements */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
@@ -169,7 +167,6 @@ export function Hero() {
         className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 pb-16 md:pt-56 md:pb-24 lg:pt-64 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
       >
-        {/* Left Content Column */}
         <div className="text-center lg:text-left z-20">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-text leading-tight mb-6">
             From Nature.{' '}
@@ -193,8 +190,12 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Right Carousel Column */}
-        <div className="relative h-[450px] lg:h-[600px] flex items-center justify-center lg:justify-center" style={{ perspective: '2000px' }}>
+        <div
+          className="relative h-[450px] lg:h-[600px] flex items-center justify-center lg:justify-center"
+          style={{ perspective: '2000px' }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="relative w-full max-w-md aspect-[4/5]">
             {mediaItems.map((item, index) => (
               <div
@@ -203,7 +204,6 @@ export function Hero() {
                 style={getCardStyle(index)}
               >
                 <div className="w-full h-full bg-surface-muted rounded-3xl overflow-hidden shadow-[0_30px_60px_-12px_rgba(0,0,0,0.35)] border border-white/20 relative group">
-                  {/* Glossy Overlay */}
                   <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent z-10 pointer-events-none" />
 
                   {item.type === 'video' ? (
@@ -232,7 +232,6 @@ export function Hero() {
               </div>
             ))}
 
-            {/* Pagination Dots */}
             <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-3 z-50 py-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
               {mediaItems.map((_, index) => (
                 <button

@@ -15,7 +15,7 @@ export function sanitizePhone(phone: string): string {
 export function sanitizeName(name: string): string {
   // Allow letters, spaces, apostrophes, dots, and hyphens. No numbers or other symbols.
   return name
-    .replace(/[^a-zA-Z\s'.\-]/g, '')
+    .replace(/[^a-zA-Z\s'.-]/g, '')
     .slice(0, 100);
 }
 

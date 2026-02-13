@@ -113,7 +113,7 @@ See Invoice: ${invoiceUrl}`;
               onChange={e => {
                 const val = e.target.value;
                 // Allow only letters, spaces, and specific punctuation
-                if (/^[a-zA-Z\s'.\-]*$/.test(val)) {
+                if (/^[a-zA-Z\s'.-]*$/.test(val)) {
                   setName(val);
                 }
               }}
