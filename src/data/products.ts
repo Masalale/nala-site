@@ -2,6 +2,16 @@ import type { Product } from '../types/shop';
 
 export const products: Product[] = [
   {
+    id: 'gentle-red-duo',
+    title: 'Gentle Red Duo',
+    description: 'Special Offer: Buy two Gentle Red bars for 800 /=! Enriched with red clay for delicate skin.',
+    image: '/images/nanobanana.jpeg',
+    price: 800,
+    ingredients: ['2x Gentle Red Soap'],
+    badge: 'Sale',
+    category: 'bundle'
+  },
+  {
     id: 'refreshing',
     title: 'Refreshing Soap',
     description: 'A traditional tallow-based bar infused with rosemary for a deeply moisturizing, refreshing cleanse.',
@@ -49,6 +59,7 @@ export const products: Product[] = [
     badge: 'New',
     category: 'soap'
   },
+
   {
     id: 'soap-saver',
     title: 'Soap Saver/ Exfoliation Bag',

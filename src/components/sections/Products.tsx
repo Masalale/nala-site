@@ -109,7 +109,8 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
         }}
       >
         {product.badge && (
-          <span className="absolute top-2 left-2 md:top-4 md:left-4 z-10 bg-primary text-text text-[10px] md:text-xs font-semibold px-2 py-0.5 md:px-3 md:py-1 rounded-full">
+          <span className={`absolute top-2 left-2 md:top-4 md:left-4 z-10 text-[10px] md:text-xs font-semibold px-2 py-0.5 md:px-3 md:py-1 rounded-full ${product.badge === 'Sale' ? 'bg-[#701a2e] text-[#fff1f2]' : 'bg-primary text-text'
+            }`}>
             {product.badge}
           </span>
         )}
@@ -119,11 +120,14 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           loading="lazy"
         />
+
       </div>
       <div className="p-3 md:p-6 flex flex-col flex-1">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2 gap-1">
-          <h3 className="text-sm md:text-lg font-semibold text-text leading-tight">{product.title}</h3>
-          <span className="text-secondary font-bold whitespace-nowrap text-sm md:text-base">KES {product.price.toLocaleString()}</span>
+          <h3 className={`text-sm md:text-lg font-semibold leading-tight ${product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-text'
+            }`}>{product.title}</h3>
+          <span className={`font-bold whitespace-nowrap text-sm md:text-base ${product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-secondary'
+            }`}>KES {product.price.toLocaleString()}</span>
         </div>
 
         {/* Short Description */}
@@ -144,7 +148,8 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
 
         <div className="hidden md:flex flex-wrap gap-1 mb-4 md:mb-6">
           {product.ingredients?.map((ing: string) => (
-            <span key={ing} className="text-[10px] md:text-xs bg-background px-1.5 py-0.5 md:px-2 md:py-1 rounded-full text-text-muted">
+            <span key={ing} className={`text-[10px] md:text-xs px-1.5 py-0.5 md:px-2 md:py-1 rounded-full ${ing === '2x Gentle Red Soap' ? 'bg-[#701a2e] text-[#fff1f2]' : 'bg-background text-text-muted'
+              }`}>
               {ing}
             </span>
           ))}
@@ -153,7 +158,8 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
         <Button
           variant="secondary"
           size="sm"
-          className="w-full mt-auto text-xs md:text-sm py-2 md:py-2.5 h-auto md:h-10"
+          className={`w-full mt-auto text-xs md:text-sm py-2 md:py-2.5 h-auto md:h-10 ${product.id === 'gentle-red-duo' ? '!bg-[#701a2e] !hover:bg-[#831c35] !text-[#fff1f2]' : ''
+            }`}
           onClick={() => addToCart(product)}
         >
           Add to Cart
