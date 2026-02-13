@@ -277,14 +277,14 @@ export function Invoice() {
           </tfoot>
         </table>
 
-        <div className="bg-surface rounded-xl p-6 flex justify-between items-center print:bg-gray-50">
+        <div className="bg-surface rounded-xl p-4 sm:p-6 flex justify-between items-center gap-2 print:bg-gray-50">
           <div>
-            <h4 className="font-bold">Payment Details</h4>
-            <p className="text-sm text-text-muted">Complete payment via M-Pesa</p>
+            <h4 className="font-bold text-sm sm:text-base">Payment Details</h4>
+            <p className="text-xs sm:text-sm text-text-muted">Complete payment via M-Pesa</p>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-text-muted uppercase">Pochi la Biashara</p>
-            <p className="font-mono text-base md:text-xl font-bold text-secondary">+254 702 255299</p>
+          <div className="text-right shrink-0">
+            <p className="text-[10px] sm:text-xs text-text-muted uppercase">Pochi la Biashara</p>
+            <p className="font-mono text-xs sm:text-xl font-bold text-secondary whitespace-nowrap">+254 702 255299</p>
           </div>
         </div>
 
