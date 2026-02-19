@@ -59,7 +59,7 @@ export function Process() {
 
                 {/* Step Circle */}
                 <div className="relative z-10 w-10 h-10 md:w-16 md:h-16 mb-3 md:mx-auto md:mb-6 bg-background md:bg-background border border-primary/20 md:border-2 rounded-full flex items-center justify-center shadow-sm md:shadow-lg group-hover:scale-110 group-hover:border-primary transition-all duration-300">
-                  <span className="text-secondary font-heading font-bold text-sm md:text-xl group-hover:text-primary transition-colors">{step.number}</span>
+                  <span className="text-white font-heading font-bold text-sm md:text-xl group-hover:text-primary transition-colors">{step.number}</span>
                 </div>
 
                 {/* Content */}
