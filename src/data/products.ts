@@ -8,7 +8,7 @@ export const products: Product[] = [
     image: '/images/nanobanana.jpeg',
     price: 800,
     ingredients: ['2x Gentle Red Soap'],
-    badge: 'Sale',
+    badge: 'Archived',
     category: 'bundle'
   },
   {

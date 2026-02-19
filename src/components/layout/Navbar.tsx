@@ -61,7 +61,7 @@ export function Navbar() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
       {/* Valentine's Announcement Bar */}
-      <Link
+      {/* <Link
         to="/shop"
         className="relative bg-[#701a2e] text-[#fff1f2] h-11 flex items-center overflow-hidden hover:bg-[#831c35] transition-colors z-[51] shadow-md border-b border-white/5"
       >
@@ -76,7 +76,7 @@ export function Navbar() {
             </span>
           ))}
         </div>
-      </Link>
+      </Link> */}
 
       {/* Main Navbar */}
       <nav

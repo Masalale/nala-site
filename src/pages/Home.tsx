@@ -5,7 +5,7 @@ import { Story } from '../components/sections/Story';
 import { Testimonials } from '../components/sections/Testimonials';
 import { Process } from '../components/sections/Process';
 import { Sustainability } from '../components/sections/Sustainability';
-import { CTABanner } from '../components/sections/CTABanner';
+// import { CTABanner } from '../components/sections/CTABanner';
 import { FAQ } from '../components/sections/FAQ';
 // import { Newsletter } from '../components/sections/Newsletter';
 
@@ -19,7 +19,7 @@ export function Home() {
             <Testimonials />
             <Process />
             <Sustainability />
-            <CTABanner />
+            {/* <CTABanner /> */}
             {/* <Newsletter /> */}
             <FAQ />
         </>
