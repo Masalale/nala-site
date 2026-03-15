@@ -7,6 +7,7 @@ export interface Product {
   ingredients: string[];
    badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | null;
   category: 'soap' | 'bundle' | 'accessory';
+  soldOut?: boolean;
 }
 
 export interface CartItem {
@@ -19,6 +20,7 @@ export interface CartItem {
    badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | null;
   category: 'soap' | 'bundle' | 'accessory';
   quantity: number;
+  soldOut?: boolean;
 }
 
 export type CustomerDetails = {

@@ -72,7 +72,7 @@ Customer: *${sanitizedName}* ${sanitizedPhone}
 
 See Invoice: ${invoiceUrl}`;
 
-      window.open(`https://wa.me/254702255299?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/254746622311?text=${encodeURIComponent(message)}`, '_blank');
       clearCart();
       onClose();
     } else {

@@ -13,7 +13,7 @@ Pure ingredients. Pure clean. No parabens, no sulfates, just nature's best for y
 
 - **Four signature soaps**: Refreshing, Turmeric, Detox, and Exfoliant
 - **Bundle pricing**: Save more with starter sets and family packs
-- **M-Pesa integration**: Seamless payments for Kenyan customers
+- **WhatsApp integration**: Direct ordering via WhatsApp for Kenyan customers
 - **Eco-conscious**: Plastic-free packaging, locally sourced ingredients
 
 ## 🛠️ Built With

@@ -114,7 +114,7 @@ export function Contact() {
           <div className="mt-8 text-center">
             <p className="text-text-muted mb-2">Or reach us directly on WhatsApp</p>
             <a
-              href="https://wa.me/254702255299"
+              href="https://wa.me/254746622311"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-medium transition-colors p-2"

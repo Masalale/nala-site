@@ -59,6 +59,16 @@ export const products: Product[] = [
     badge: 'New',
     category: 'soap'
   },
+  {
+    id: 'sensitive',
+    title: 'Sensitive/ Eczema Soap',
+    description: 'Anti-inflammatory, soothes sensitive skin. Reduces itchiness and irritation.',
+    image: '/images/sensitive.jpeg',
+    price: 420,
+    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Essential Oils'],
+    badge: 'New',
+    category: 'soap'
+  },
 
   {
     id: 'soap-saver',
@@ -77,6 +87,7 @@ export const products: Product[] = [
     price: 2100,
     ingredients: ['All 5 Soaps', 'Soap Saver'],
     badge: 'Premium',
-    category: 'bundle'
+    category: 'bundle',
+    soldOut: true
   }
 ];
