@@ -64,6 +64,7 @@ function securityHeaders(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), securityHeaders()],
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
