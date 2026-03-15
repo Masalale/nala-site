@@ -40,7 +40,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
 
         <div className="p-5">
           {/* Header: Image + Metadata Side-by-Side */}
-          <div className="flex gap-4 mb-4">
+          <div className={`flex gap-4 mb-4 ${product.soldOut ? 'grayscale opacity-75' : ''}`}>
             <div className="relative w-40 h-40 shrink-0 rounded-2xl overflow-hidden bg-gray-50 shadow-inner">
               <img
                 src={product.image}
@@ -50,13 +50,17 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
             </div>
 
             <div className="flex flex-col justify-center py-1">
-              {product.badge && (
+              {product.soldOut ? (
+                <span className="inline-block bg-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit">
+                  Sold Out
+                </span>
+              ) : product.badge ? (
                 <span className="inline-block bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit">
                   {product.badge}
                 </span>
-              )}
-              <h3 className="font-bold text-text text-lg leading-tight mb-1">{product.title}</h3>
-              <span className="text-secondary font-bold text-sm">KES {product.price.toLocaleString()}</span>
+              ) : null}
+              <h3 className={`font-bold text-lg leading-tight mb-1 ${product.soldOut ? 'text-gray-500' : 'text-text'}`}>{product.title}</h3>
+              <span className={`font-bold text-sm ${product.soldOut ? 'text-gray-400 line-through' : 'text-secondary'}`}>KES {product.price.toLocaleString()}</span>
             </div>
           </div>
 
@@ -78,13 +82,15 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
           <Button
             variant="secondary"
             size="sm"
-            className="w-full py-2.5 rounded-xl text-sm shadow-md shadow-secondary/20"
+            className={`w-full py-2.5 rounded-xl text-sm shadow-md shadow-secondary/20 ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={() => {
+              if (product.soldOut) return;
               addToCart(product);
               onClose();
             }}
+            disabled={product.soldOut}
           >
-            Add to Cart
+            {product.soldOut ? 'Sold Out' : 'Add to Cart'}
           </Button>
         </div>
       </div>
@@ -98,7 +104,7 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
     <div
       key={product.id}
       className={`group flex flex-col bg-surface rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
+        } ${product.soldOut ? 'grayscale opacity-75' : ''}`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <div
@@ -108,7 +114,11 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
           if (window.innerWidth < 768) onOpen();
         }}
       >
-        {product.badge && (
+        {product.soldOut ? (
+          <span className="absolute top-2 left-2 md:top-4 md:left-4 z-10 text-[10px] md:text-xs font-semibold px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-gray-800 text-white">
+            Sold Out
+          </span>
+        ) : product.badge && (
           <span className={`absolute top-2 left-2 md:top-4 md:left-4 z-10 text-[10px] md:text-xs font-semibold px-2 py-0.5 md:px-3 md:py-1 rounded-full ${product.badge === 'Sale' ? 'bg-[#701a2e] text-[#fff1f2]' : 'bg-primary text-text'
             }`}>
             {product.badge}
@@ -124,9 +134,9 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
       </div>
       <div className="p-3 md:p-6 flex flex-col flex-1">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2 gap-1">
-          <h3 className={`text-sm md:text-lg font-semibold leading-tight ${product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-text'
+          <h3 className={`text-sm md:text-lg font-semibold leading-tight ${product.soldOut ? 'text-gray-500' : product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-text'
             }`}>{product.title}</h3>
-          <span className={`font-bold whitespace-nowrap text-sm md:text-base ${product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-secondary'
+          <span className={`font-bold whitespace-nowrap text-sm md:text-base ${product.soldOut ? 'text-gray-400 line-through' : product.id === 'gentle-red-duo' ? 'text-[#701a2e]' : 'text-secondary'
             }`}>KES {product.price.toLocaleString()}</span>
         </div>
 
@@ -159,10 +169,11 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
           variant="secondary"
           size="sm"
           className={`w-full mt-auto text-xs md:text-sm py-2 md:py-2.5 h-auto md:h-10 ${product.id === 'gentle-red-duo' ? '!bg-[#701a2e] !hover:bg-[#831c35] !text-[#fff1f2]' : ''
-            }`}
-          onClick={() => addToCart(product)}
+            } ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+          onClick={() => !product.soldOut && addToCart(product)}
+          disabled={product.soldOut}
         >
-          Add to Cart
+          {product.soldOut ? 'Sold Out' : 'Add to Cart'}
         </Button>
       </div>
     </div>

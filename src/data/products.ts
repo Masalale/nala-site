@@ -2,14 +2,24 @@ import type { Product } from '../types/shop';
 
 export const products: Product[] = [
   {
-    id: 'gentle-red-duo',
-    title: 'Gentle Red Duo',
-    description: 'Special Offer: Buy two Gentle Red bars for 800 /=! Enriched with red clay for delicate skin.',
-    image: '/images/nanobanana.jpeg',
-    price: 800,
-    ingredients: ['2x Gentle Red Soap'],
-    badge: 'Archived',
-    category: 'bundle'
+    id: 'soap-saver',
+    title: 'Soap Saver/ Exfoliation Bag',
+    description: 'Extend the life of your soap bars while gently exfoliating your skin. Perfect for using up soap remnants and creating a luxurious lather.',
+    image: '/images/soap_saver.jpeg',
+    price: 200,
+    ingredients: ['Natural Sisal Fiber'],
+    category: 'accessory'
+  },
+  {
+    id: 'bundle-full',
+    title: 'The Nala Collection',
+    description: 'Get all 5 signature soaps plus a wooden soap saver. The ultimate self-care package.',
+    image: '/images/collection.jpeg',
+    price: 2100,
+    ingredients: ['All 5 Soaps', 'Soap Saver'],
+    badge: 'Premium',
+    category: 'bundle',
+    soldOut: true
   },
   {
     id: 'refreshing',
@@ -32,6 +42,26 @@ export const products: Product[] = [
     category: 'soap'
   },
   {
+    id: 'gentle-red',
+    title: 'Gentle Red Soap',
+    description: 'Enriched with red clay and soothing oils, this gentle bar cleanses delicate skin without irritation.',
+    image: '/images/gentle_red.jpeg',
+    price: 420,
+    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Red Clay', 'Essential Oils'],
+    badge: 'New',
+    category: 'soap'
+  },
+  {
+    id: 'sensitive',
+    title: 'Sensitive/ Eczema Soap',
+    description: 'Anti-inflammatory, soothes sensitive skin. Reduces itchiness and irritation.',
+    image: '/images/sensitive.jpeg',
+    price: 420,
+    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Oats', 'Essential Oils'],
+    badge: 'New',
+    category: 'soap'
+  },
+  {
     id: 'detox',
     title: 'Detox Soap',
     description: 'Purifying activated charcoal meets the richness of beef tallow to clear impurities without stripping the skin.',
@@ -50,44 +80,13 @@ export const products: Product[] = [
     category: 'soap'
   },
   {
-    id: 'gentle-red',
-    title: 'Gentle Red Soap',
-    description: 'Enriched with red clay and soothing oils, this gentle bar cleanses delicate skin without irritation.',
-    image: '/images/gentle_red.jpeg',
-    price: 420,
-    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Red Clay', 'Essential Oils'],
-    badge: 'New',
-    category: 'soap'
-  },
-  {
-    id: 'sensitive',
-    title: 'Sensitive/ Eczema Soap',
-    description: 'Anti-inflammatory, soothes sensitive skin. Reduces itchiness and irritation.',
-    image: '/images/sensitive.jpeg',
-    price: 420,
-    ingredients: ['Saponified Beef Tallow', 'Coconut Oil', 'Olive Oil', 'Castor Oil', 'Essential Oils'],
-    badge: 'New',
-    category: 'soap'
-  },
-
-  {
-    id: 'soap-saver',
-    title: 'Soap Saver/ Exfoliation Bag',
-    description: 'Extend the life of your soap bars while gently exfoliating your skin. Perfect for using up soap remnants and creating a luxurious lather.',
-    image: '/images/soap_saver.jpeg',
-    price: 200,
-    ingredients: ['Natural Sisal Fiber'],
-    category: 'accessory'
-  },
-  {
-    id: 'bundle-full',
-    title: 'The Nala Collection',
-    description: 'Get all 5 signature soaps plus a wooden soap saver. The ultimate self-care package.',
-    image: '/images/collection.jpeg',
-    price: 2100,
-    ingredients: ['All 5 Soaps', 'Soap Saver'],
-    badge: 'Premium',
-    category: 'bundle',
-    soldOut: true
+    id: 'gentle-red-duo',
+    title: 'Gentle Red Duo',
+    description: 'Special Offer: Buy two Gentle Red bars for 800 /=! Enriched with red clay for delicate skin.',
+    image: '/images/nanobanana.jpeg',
+    price: 800,
+    ingredients: ['2x Gentle Red Soap'],
+    badge: 'Archived',
+    category: 'bundle'
   }
 ];
