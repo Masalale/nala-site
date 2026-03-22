@@ -5,7 +5,7 @@ export interface Product {
   image: string;
   description: string;
   ingredients: string[];
-   badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | null;
+  badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | 'Sold Out';
   category: 'soap' | 'bundle' | 'accessory';
   soldOut?: boolean;
 }
@@ -17,7 +17,7 @@ export interface CartItem {
   image: string;
   description: string;
   ingredients: string[];
-   badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | null;
+  badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | 'Sold Out';
   category: 'soap' | 'bundle' | 'accessory';
   quantity: number;
   soldOut?: boolean;

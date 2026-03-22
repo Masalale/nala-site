@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
-import { createOrderWithValidation } from '../../lib/supabase';
+import { createOrderWithValidation } from '../../lib/convex';
 import { generatePublicRef } from '../../utils/hash';
 import { sanitizePhone, sanitizeName, isValidPhone, isValidName } from '../../utils/security';
 

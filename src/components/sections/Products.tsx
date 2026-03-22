@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
-import { products } from '../../data/products';
 import { useCart } from '../../context/CartContext';
 import type { Product } from '../../types/shop';
 
@@ -184,6 +185,8 @@ export function Products() {
   const { ref, isVisible } = useScrollAnimation();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const location = useLocation();
+  const rawProducts = useQuery(api.products.getAll);
+  const products = (rawProducts ?? []) as Product[];
 
   // Sync UI state with URL params for deep linking
   useEffect(() => {
@@ -196,7 +199,7 @@ export function Products() {
         setSelectedProduct(product);
       }
     }
-  }, [location.search]);
+  }, [location.search, products]);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-surface">
@@ -215,15 +218,29 @@ export function Products() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
-          {products.filter(p => p.badge !== 'Archived').map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-              isVisible={isVisible}
-              onOpen={() => setSelectedProduct(product)}
-            />
-          ))}
+          {rawProducts === undefined ? (
+            // Loading skeleton
+            Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-surface rounded-2xl md:rounded-3xl overflow-hidden shadow-sm animate-pulse">
+                <div className="aspect-square bg-gray-200" />
+                <div className="p-3 md:p-6 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  <div className="h-8 bg-gray-200 rounded mt-4" />
+                </div>
+              </div>
+            ))
+          ) : (
+            products.filter(p => p.badge !== 'Archived').map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                isVisible={isVisible}
+                onOpen={() => setSelectedProduct(product)}
+              />
+            ))
+          )}
         </div>
       </div>
 

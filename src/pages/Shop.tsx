@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Products } from '../components/sections/Products';
 import { CartDrawer } from '../components/shop/CartDrawer';
 import { useCart } from '../context/CartContext';
-import { getOrderByRef } from '../lib/supabase';
+import { getOrderByRef } from '../lib/convex';
 
 export function Shop() {
     const { setIsCartOpen, itemCount, addToCart, clearCart } = useCart();

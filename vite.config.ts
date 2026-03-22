@@ -14,7 +14,7 @@ function securityHeaders(): Plugin {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
           "img-src 'self' data: https:; " +
           "font-src 'self' https://fonts.gstatic.com; " +
-          "connect-src 'self' https://*.supabase.co https://wa.me https://va.vercel-scripts.com; " +
+          "connect-src 'self' https://adorable-goldfish-993.eu-west-1.convex.cloud wss://adorable-goldfish-993.eu-west-1.convex.cloud https://wa.me https://va.vercel-scripts.com; " +
           "media-src 'self'; " +
           "object-src 'none'; " +
           "base-uri 'self'; " +
@@ -42,7 +42,7 @@ function securityHeaders(): Plugin {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
           "img-src 'self' data: https:; " +
           "font-src 'self' https://fonts.gstatic.com; " +
-          "connect-src 'self' https://*.supabase.co https://wa.me https://va.vercel-scripts.com; " +
+          "connect-src 'self' https://adorable-goldfish-993.eu-west-1.convex.cloud wss://adorable-goldfish-993.eu-west-1.convex.cloud https://wa.me https://va.vercel-scripts.com; " +
           "media-src 'self'; " +
           "object-src 'none'; " +
           "base-uri 'self'; " +

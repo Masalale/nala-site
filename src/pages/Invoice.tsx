@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { getOrderByRef } from '../lib/supabase';
+import { getOrderByRef } from '../lib/convex';
 import type { Order } from '../types/shop';
 import { Button } from '../components/ui/Button';
 import html2canvas from 'html2canvas';
