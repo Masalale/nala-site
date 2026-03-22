@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
 import { createOrderWithValidation } from '../../lib/convex';
@@ -17,6 +17,36 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap
+  useEffect(() => {
+    if (!isOpen) return;
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    const focusable = modal.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
+    };
+
+    modal.addEventListener('keydown', handleTab);
+    return () => modal.removeEventListener('keydown', handleTab);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -74,7 +104,11 @@ Customer: *${sanitizedName}* ${sanitizedPhone}
 
 See Invoice: ${invoiceUrl}`;
 
-      window.open(`https://wa.me/254746622311?text=${encodeURIComponent(message)}`, '_blank');
+      const waWindow = window.open(`https://wa.me/254746622311?text=${encodeURIComponent(message)}`, '_blank');
+      if (!waWindow) {
+        // Popup blocked — fallback to direct navigation
+        window.location.href = `https://wa.me/254746622311?text=${encodeURIComponent(message)}`;
+      }
       clearCart();
       onClose();
     } else {
@@ -88,9 +122,9 @@ See Invoice: ${invoiceUrl}`;
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+      <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="checkout-title" className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Checkout</h2>
+          <h2 id="checkout-title" className="text-xl font-bold">Checkout</h2>
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-[#da924b] text-[#3d5a3c] hover:brightness-110 transition-colors shadow-sm"
@@ -107,8 +141,9 @@ See Invoice: ${invoiceUrl}`;
             <div className="text-red-500 text-sm">{error}</div>
           )}
           <div>
-            <label className="block text-sm font-medium mb-1">Full Name *</label>
+            <label htmlFor="checkout-name" className="block text-sm font-medium mb-1">Full Name *</label>
             <input
+              id="checkout-name"
               type="text"
               required
               value={name}
@@ -127,8 +162,9 @@ See Invoice: ${invoiceUrl}`;
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Whatsapp Number *</label>
+            <label htmlFor="checkout-phone" className="block text-sm font-medium mb-1">Whatsapp Number *</label>
             <input
+              id="checkout-phone"
               type="tel"
               required
               value={phone}

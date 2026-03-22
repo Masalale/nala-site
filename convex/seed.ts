@@ -20,7 +20,7 @@ export const seedOrders = internalMutation({
           {
             id: 'refreshing',
             badge: 'Bestseller' as const,
-            image: '/images/refreshing.jpeg',
+            image: '/images/refreshing.webp',
             price: 420,
             title: 'Refreshing Soap',
             category: 'soap' as const,
@@ -41,7 +41,7 @@ export const seedOrders = internalMutation({
           {
             id: 'turmeric',
             badge: 'Premium' as const,
-            image: '/images/turmeric.jpeg',
+            image: '/images/turmeric.webp',
             price: 420,
             title: 'Turmeric Soap',
             category: 'soap' as const,
@@ -61,7 +61,7 @@ export const seedOrders = internalMutation({
         items: [
           {
             id: 'detox',
-            image: '/images/detox.jpeg',
+            image: '/images/detox.webp',
             price: 420,
             title: 'Detox Soap',
             category: 'soap' as const,
@@ -71,7 +71,7 @@ export const seedOrders = internalMutation({
           },
           {
             id: 'exfoliant',
-            image: '/images/exfoliant.jpeg',
+            image: '/images/exfoliant.webp',
             price: 420,
             title: 'Exfoliant Soap',
             category: 'soap' as const,
@@ -82,7 +82,7 @@ export const seedOrders = internalMutation({
           {
             id: 'gentle-red',
             badge: 'New' as const,
-            image: '/images/gentle_red.jpeg',
+            image: '/images/gentle_red.webp',
             price: 420,
             title: 'Gentle Red Soap',
             category: 'soap' as const,
@@ -120,7 +120,7 @@ export const seedProducts = internalMutation({
         title: 'Soap Saver/ Exfoliation Bag',
         description:
           'Extend the life of your soap bars while gently exfoliating your skin. Perfect for using up soap remnants and creating a luxurious lather.',
-        image: '/images/soap_saver.jpeg',
+        image: '/images/soap_saver.webp',
         price: 200,
         ingredients: ['Natural Sisal Fiber'],
         badge: 'Sold Out' as const,
@@ -132,7 +132,7 @@ export const seedProducts = internalMutation({
         title: 'The Nala Collection',
         description:
           'Get all 5 signature soaps plus a wooden soap saver. The ultimate self-care package.',
-        image: '/images/collection.jpeg',
+        image: '/images/collection.webp',
         price: 2100,
         ingredients: ['All 5 Soaps', 'Soap Saver'],
         badge: 'Premium' as const,
@@ -144,7 +144,7 @@ export const seedProducts = internalMutation({
         title: 'Refreshing Soap',
         description:
           'A traditional tallow-based bar infused with rosemary for a deeply moisturizing, refreshing cleanse.',
-        image: '/images/refreshing.jpeg',
+        image: '/images/refreshing.webp',
         price: 420,
         ingredients: [
           'Saponified Beef Tallow',
@@ -162,7 +162,7 @@ export const seedProducts = internalMutation({
         title: 'Turmeric Soap',
         description:
           'A healing tallow bar enriched with turmeric to naturally brighten skin and restore its natural glow.',
-        image: '/images/turmeric.jpeg',
+        image: '/images/turmeric.webp',
         price: 420,
         ingredients: [
           'Saponified Beef Tallow',
@@ -180,7 +180,7 @@ export const seedProducts = internalMutation({
         title: 'Gentle Red Soap',
         description:
           'Enriched with red clay and soothing oils, this gentle bar cleanses delicate skin without irritation.',
-        image: '/images/gentle_red.jpeg',
+        image: '/images/gentle_red.webp',
         price: 420,
         ingredients: [
           'Saponified Beef Tallow',
@@ -198,7 +198,7 @@ export const seedProducts = internalMutation({
         title: 'Sensitive/ Eczema Soap',
         description:
           'Anti-inflammatory, soothes sensitive skin. Reduces itchiness and irritation.',
-        image: '/images/sensitive.jpeg',
+        image: '/images/sensitive.webp',
         price: 420,
         ingredients: [
           'Saponified Beef Tallow',
@@ -216,7 +216,7 @@ export const seedProducts = internalMutation({
         title: 'Detox Soap',
         description:
           'Purifying activated charcoal meets the richness of beef tallow to clear impurities without stripping the skin.',
-        image: '/images/detox.jpeg',
+        image: '/images/detox.webp',
         price: 420,
         ingredients: [
           'Saponified Beef Tallow',
@@ -233,7 +233,7 @@ export const seedProducts = internalMutation({
         title: 'Exfoliant Soap',
         description:
           'Creamy goat milk and real coffee grounds combine to gently buff away dead skin while providing intense nourishment.',
-        image: '/images/exfoliant.jpeg',
+        image: '/images/exfoliant.webp',
         price: 420,
         ingredients: ['Goat Milk', 'Coffee grounds', 'Essential Oils'],
         category: 'soap' as const,
@@ -242,7 +242,7 @@ export const seedProducts = internalMutation({
         slug: 'gentle-red-duo',
         title: 'Gentle Red Duo',
         description: 'Two Gentle Red Soap bars. Save 40 KES!',
-        image: '/images/gentle_red.jpeg',
+        image: '/images/gentle_red.webp',
         price: 800,
         ingredients: [
           'Saponified Beef Tallow',

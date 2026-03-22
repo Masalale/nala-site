@@ -1,19 +1,9 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
-*.local
-
-# Lock files (project uses bun.lock)
-package-lock.json
 
 # Environment variables
 .env
@@ -21,30 +11,40 @@ package-lock.json
 .env.*.local
 .env.production
 .env.development
+*.local
 
-# Editor directories and files
+# Lock files (project uses bun.lock)
+package-lock.json
+
+# Logs
+*.log
+
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
 *.sw?
 
-# Project planning/docs (not needed for production)
+# OS
+.DS_Store
+
+# Convex
+convex/_generated/
+convex/migrations.ts
+
+# Cache
+*.cache
+.cache/
+
+# AI tools
+.claude/
+.sisyphus/
+
+# Project planning (not needed in repo)
 LANDING_PAGE_INSTRUCTIONS.md
 previous_colors.md
 design-dna.json
 
-# Cache files
-*.cache
-.cache/
-
-# Sisyphus planning artifacts
-.sisyphus/
-
-# Lighthouse reports
+# Reports
 lighthouse_*.json
 lighthouse_*.html

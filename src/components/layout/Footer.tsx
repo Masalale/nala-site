@@ -10,7 +10,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-2">
             <Link to="/" className="inline-block">
               <img
-                src="/images/plainbg_logo.png"
+                src="/images/favicon.webp"
                 alt="Nature's Lather (NALA)"
                 className="h-40 w-40 object-contain rounded-full mb-4"
                 loading="lazy"

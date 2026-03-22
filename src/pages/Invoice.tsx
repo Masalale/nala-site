@@ -3,8 +3,6 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { getOrderByRef } from '../lib/convex';
 import type { Order } from '../types/shop';
 import { Button } from '../components/ui/Button';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { toast } from 'sonner';
 
 export function Invoice() {
@@ -41,6 +39,11 @@ export function Invoice() {
     setGeneratingDownload(true);
 
     try {
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ]);
+
       await document.fonts.ready;
 
       const sourceNode = invoiceRef.current;

@@ -44,7 +44,7 @@ export function Story() {
             <div className="relative w-[73%] lg:w-full max-w-md mx-auto aspect-[4/5]">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/10 rounded-3xl blur-2xl" />
               <video
-                poster="/images/story_soap_poster.jpg"
+                poster="/images/story_soap_poster.webp"
                 autoPlay
                 loop
                 muted

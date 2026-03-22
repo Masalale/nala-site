@@ -60,23 +60,23 @@ export function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
-      {/* Valentine's Announcement Bar */}
-      {/* <Link
+      {/* Announcement Bar Template — uncomment and customise for promotions
+      <Link
         to="/shop"
         className="relative bg-[#701a2e] text-[#fff1f2] h-11 flex items-center overflow-hidden hover:bg-[#831c35] transition-colors z-[51] shadow-md border-b border-white/5"
       >
         <div className="absolute flex items-center animate-marquee whitespace-nowrap min-w-full">
           {[1, 2, 3, 4].map((i) => (
             <span key={i} className="mx-6 text-[13px] font-medium tracking-wide flex items-center gap-3">
-              <span className="font-bold tracking-widest text-white uppercase bg-white/10 px-2 py-0.5 rounded-[4px]">Valentine Sale</span>
-              <span className="text-white/80">Buy 2+ <span className="font-serif italic text-white text-base">Gentle Red</span> Soaps for <span className="font-bold text-white border-b border-white/40">400/-</span> each</span>
+              <span className="font-bold tracking-widest text-white uppercase bg-white/10 px-2 py-0.5 rounded-[4px]">PROMO TITLE</span>
+              <span className="text-white/80">Promo description here</span>
               <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-              <span className="text-[#da924b] font-medium">Ends Feb 15th</span>
-              <span className="ml-6 text-xl leading-none">💝</span>
+              <span className="text-[#da924b] font-medium">Ends DATE</span>
             </span>
           ))}
         </div>
-      </Link> */}
+      </Link>
+      */}
 
       {/* Main Navbar */}
       <nav
@@ -96,7 +96,7 @@ export function Navbar() {
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <img
-                  src="/images/plainbg_logo.png"
+                  src="/images/favicon.webp"
                   alt="Nature's Lather (NALA)"
                   className="relative w-15 h-15 object-contain rounded-full transition-transform duration-300 group-hover:scale-105"
                 />

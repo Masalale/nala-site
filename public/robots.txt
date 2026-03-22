@@ -6,4 +6,4 @@ Disallow: /account
 Disallow: /admin
 
 # Sitemap
-Sitemap: https://nalather.netlify.app/sitemap.xml
+Sitemap: https://nalather.vercel.app/sitemap.xml

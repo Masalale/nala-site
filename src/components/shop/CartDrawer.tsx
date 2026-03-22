@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
 import { CheckoutModal } from './CheckoutModal';
@@ -7,10 +7,40 @@ export function CartDrawer() {
   const { isCartOpen, setIsCartOpen, items, removeFromCart, updateQuantity, cartTotal } = useCart();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
+  const drawerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     document.body.style.overflow = isCartOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [isCartOpen]);
+
+  // Focus trap + Escape key
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    const focusable = drawer.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setIsCartOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
+    };
+
+    drawer.addEventListener('keydown', handleTab);
+    return () => drawer.removeEventListener('keydown', handleTab);
+  }, [isCartOpen, setIsCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -19,7 +49,7 @@ export function CartDrawer() {
       <div className="fixed inset-0 z-50 flex justify-end">
         <div className="absolute inset-0 bg-black/50" onClick={() => setIsCartOpen(false)} />
 
-        <div className="relative z-10 w-full md:max-w-md bg-white shadow-xl flex flex-col h-full">
+        <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Shopping cart" className="relative z-10 w-full md:max-w-md bg-white shadow-xl flex flex-col h-full">
           <div className="p-6 border-b flex justify-between items-center">
             <h2 className="text-xl font-bold">Your Cart ({items.length})</h2>
             <button

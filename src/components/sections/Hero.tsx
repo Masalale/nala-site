@@ -21,7 +21,7 @@ interface MediaItem {
 const mediaItems: MediaItem[] = [
   {
     type: 'image',
-    src: '/images/gentle_red_valentines.jpeg',
+    src: '/images/gentle_red_valentines.webp',
     alt: "Valentine's Day Special - Gentle Red Soap",
     className: 'object-cover object-center w-full',
     style: { height: '115%', marginTop: '-18%' }
@@ -32,7 +32,7 @@ const mediaItems: MediaItem[] = [
       { src: '/videos/model_av1.webm', type: 'video/webm' },
       { src: '/videos/model.mp4', type: 'video/mp4' }
     ],
-    poster: '/images/model_poster.jpg',
+    poster: '/images/model_poster.webp',
     alt: "Model using Nature's Lather soap"
   },
   {
@@ -41,20 +41,20 @@ const mediaItems: MediaItem[] = [
       { src: '/videos/intro_av1.webm', type: 'video/webm' },
       { src: '/videos/intro.mp4', type: 'video/mp4' }
     ],
-    poster: '/images/intro_poster.jpg',
+    poster: '/images/intro_poster.webp',
     alt: "Introduction to Nature's Lather products",
     className: 'object-bottom'
   },
   {
     type: 'image',
-    src: '/images/collection.jpeg',
+    src: '/images/collection.webp',
     alt: "Full collection of Nature's Lather soaps",
     className: 'object-cover object-center w-full',
     style: { height: '115%', marginTop: '-18%' }
   },
   {
     type: 'image',
-    src: '/images/stamp.jpeg',
+    src: '/images/stamp.webp',
     alt: "Nature's Lather soap with embossed stamp",
     className: 'object-cover object-center w-full',
     style: { height: '115%', marginTop: '-7.5%' }
