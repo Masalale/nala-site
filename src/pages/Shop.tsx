@@ -12,17 +12,19 @@ export function Shop() {
     // Handle Reorder Logic
     useEffect(() => {
         const reorderRef = searchParams.get('reorder');
+        const reorderToken = searchParams.get('token');
         if (reorderRef) {
-            getOrderByRef(reorderRef).then(order => {
+            getOrderByRef(reorderRef, reorderToken ?? undefined).then(order => {
                 if (order && order.items.length > 0) {
                     clearCart();
                     order.items.forEach(item => {
                         addToCart(item, item.quantity);
                     });
                     setIsCartOpen(true);
-                    // Remove param to prevent re-triggering on refresh
                     setSearchParams({}, { replace: true });
                 }
+            }).catch(err => {
+                console.error('Failed to load reorder:', err);
             });
         }
     }, [searchParams, addToCart, clearCart, setIsCartOpen, setSearchParams]);
@@ -34,6 +36,7 @@ export function Shop() {
 
             <button
                 onClick={() => setIsCartOpen(true)}
+                aria-label={`Open cart${itemCount > 0 ? `, ${itemCount} items` : ''}`}
                 className="fixed bottom-8 right-8 z-40 bg-secondary text-white p-4 rounded-full shadow-lg hover:bg-secondary/90 transition-all"
             >
                 <div className="relative">

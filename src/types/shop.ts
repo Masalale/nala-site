@@ -28,22 +28,8 @@ export type CustomerDetails = {
   phone: string;
 }
 
-export type Order = {
-  id: string;
-  public_ref: string;
-  customer_name: string;
-  customer_phone: string;
-  items: CartItem[];
-  total: number;
-  link: string;
-  created_at: string;
-}
+// Derived from Convex getByRef query — single source of truth
+import type { FunctionReturnType } from 'convex/server';
+import type { api } from '../../convex/_generated/api';
 
-export type OrderInsert = {
-  public_ref: string;
-  customer_name: string;
-  customer_phone: string;
-  items: CartItem[];
-  total: number;
-  link: string;
-}
+export type Order = NonNullable<FunctionReturnType<typeof api.orders.getByRef>>;

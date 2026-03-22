@@ -13,6 +13,7 @@ export const seedOrders = internalMutation({
     const orders = [
       {
         publicRef: 'VBsiaP6y',
+        viewToken: 'yZaBcDeFgHiJ',
         customerName: 'Nash Nash',
         customerPhone: '254706637515',
         items: [
@@ -33,6 +34,7 @@ export const seedOrders = internalMutation({
       },
       {
         publicRef: 'avtJCp36',
+        viewToken: 'aBcDeFgHiJkL',
         customerName: 'Kui Njogu',
         customerPhone: '0724606408',
         items: [
@@ -53,6 +55,7 @@ export const seedOrders = internalMutation({
       },
       {
         publicRef: 'P2AoIDSE',
+        viewToken: 'mNoPqRsTuVwX',
         customerName: 'Njenga Karanja',
         customerPhone: '0721574426',
         items: [

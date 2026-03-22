@@ -30,13 +30,14 @@ const cartItemValidator = v.object({
 export const createOrder = mutation({
   args: {
     publicRef: v.string(),
+    viewToken: v.string(),
     customerName: v.string(),
     customerPhone: v.string(),
     items: v.array(cartItemValidator),
     link: v.string(),
   },
   handler: async (ctx, args) => {
-    const { publicRef, customerName, customerPhone, items, link } = args;
+    const { publicRef, viewToken, customerName, customerPhone, items, link } = args;
 
     // Validation
     const errors: string[] = [];
@@ -45,12 +46,18 @@ export const createOrder = mutation({
       errors.push('Invalid order reference');
     }
 
+    if (!viewToken || viewToken.length !== 12) {
+      errors.push('Invalid view token');
+    }
+
     if (!customerName || customerName.trim().length < 2) {
       errors.push('Customer name is required');
     }
 
     if (!customerPhone || customerPhone.trim().length < 9) {
       errors.push('Customer phone is required');
+    } else if (!/^(?:\+?254|0)[17]\d{8}$/.test(customerPhone.trim())) {
+      errors.push('Invalid phone number format');
     }
 
     if (!items || items.length === 0) {
@@ -75,6 +82,7 @@ export const createOrder = mutation({
 
     const orderId = await ctx.db.insert('orders', {
       publicRef,
+      viewToken,
       customerName,
       customerPhone,
       items,
@@ -87,14 +95,24 @@ export const createOrder = mutation({
 });
 
 export const getByRef = query({
-  args: { publicRef: v.string() },
-  handler: async (ctx, { publicRef }) => {
-    const order = await ctx.db
-      .query('orders')
-      .withIndex('by_public_ref', (q) => q.eq('publicRef', publicRef))
-      .first();
+  args: { publicRef: v.string(), viewToken: v.optional(v.string()) },
+  handler: async (ctx, { publicRef, viewToken }) => {
+    // Legacy orders have no viewToken — look up by ref only
+    // New orders require both ref + token for security
+    const order = viewToken
+      ? await ctx.db
+          .query('orders')
+          .withIndex('by_ref_and_token', (q) => q.eq('publicRef', publicRef).eq('viewToken', viewToken))
+          .first()
+      : await ctx.db
+          .query('orders')
+          .withIndex('by_public_ref', (q) => q.eq('publicRef', publicRef))
+          .first();
 
     if (!order) return null;
+
+    // Block access if order has a token but none was provided
+    if (order.viewToken && !viewToken) return null;
 
     return {
       id: order._id,
@@ -104,6 +122,7 @@ export const getByRef = query({
       items: order.items,
       total: order.total,
       link: order.link,
+      view_token: order.viewToken,
       created_at: new Date(order._creationTime).toISOString(),
     };
   },

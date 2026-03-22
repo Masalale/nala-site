@@ -47,6 +47,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
                 src={product.image}
                 alt={product.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
 

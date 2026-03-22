@@ -49,10 +49,10 @@ export function CartDrawer() {
                     <h3 className="font-medium">{item.title}</h3>
                     <p className="text-secondary font-bold">KES {item.price.toLocaleString()}</p>
                     <div className="flex items-center gap-2 mt-2">
-                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 border rounded">-</button>
+                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 border rounded" aria-label={`Decrease ${item.title} quantity`}>-</button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 border rounded">+</button>
-                      <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-sm ml-auto">Remove</button>
+                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 border rounded" aria-label={`Increase ${item.title} quantity`}>+</button>
+                      <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-sm ml-auto" aria-label={`Remove ${item.title} from cart`}>Remove</button>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
 import { createOrderWithValidation } from '../../lib/convex';
-import { generatePublicRef } from '../../utils/hash';
+import { generatePublicRef, generateViewToken } from '../../utils/hash';
 import { sanitizePhone, sanitizeName, isValidPhone, isValidName } from '../../utils/security';
 
 
@@ -40,11 +40,13 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     setLoading(true);
 
     const publicRef = generatePublicRef();
+    const viewToken = generateViewToken();
     const origin = window.location.origin;
-    const invoiceUrl = `${origin}/invoice?ref=${publicRef}`;
+    const invoiceUrl = `${origin}/invoice?ref=${publicRef}&token=${viewToken}`;
 
     const { order: savedOrder, error: orderError } = await createOrderWithValidation(
       publicRef,
+      viewToken,
       sanitizedName,
       sanitizedPhone,
       items,

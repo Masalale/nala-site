@@ -24,6 +24,7 @@ export function getConvexClient(): ConvexReactClient | null {
 
 export async function createOrderWithValidation(
   publicRef: string,
+  viewToken: string,
   customerName: string,
   customerPhone: string,
   items: CartItem[],
@@ -40,6 +41,7 @@ export async function createOrderWithValidation(
   try {
     const result = await client.mutation(api.orders.createOrder, {
       publicRef,
+      viewToken,
       customerName,
       customerPhone,
       items,
@@ -54,7 +56,7 @@ export async function createOrderWithValidation(
       return { order: null, error: 'Order service returned an empty response' };
     }
 
-    const order = await getOrderByRef(publicRef);
+    const order = await getOrderByRef(publicRef, viewToken);
     if (!order) {
       return { order: null, error: 'Order created but could not be retrieved' };
     }
@@ -66,7 +68,7 @@ export async function createOrderWithValidation(
   }
 }
 
-export async function getOrderByRef(publicRef: string): Promise<Order | null> {
+export async function getOrderByRef(publicRef: string, viewToken?: string): Promise<Order | null> {
   const client = getConvexClient();
   if (!client) return null;
 
@@ -76,8 +78,8 @@ export async function getOrderByRef(publicRef: string): Promise<Order | null> {
   }
 
   try {
-    const data = await client.query(api.orders.getByRef, { publicRef });
-    return data as Order | null;
+    const data = await client.query(api.orders.getByRef, { publicRef, viewToken });
+    return data ?? null;
   } catch (err) {
     console.error('Error fetching order:', err);
     return null;

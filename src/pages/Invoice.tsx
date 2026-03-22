@@ -17,26 +17,24 @@ export function Invoice() {
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
 
   const ref = searchParams.get('ref');
+  const token = searchParams.get('token');
 
   useEffect(() => {
-    if (!ref) {
+    if (!ref || ref.length !== 8) {
       setError('Invalid order reference');
       setLoading(false);
       return;
     }
 
-    if (ref.length !== 8) {
-      setError('Invalid order reference');
-      setLoading(false);
-      return;
-    }
-
-    getOrderByRef(ref).then((data: Order | null) => {
+    getOrderByRef(ref, token ?? undefined).then((data: Order | null) => {
       setOrder(data);
       setLoading(false);
       if (!data) setError('Order not found');
+    }).catch(() => {
+      setError('Failed to load order');
+      setLoading(false);
     });
-  }, [ref]);
+  }, [ref, token]);
 
   const handleDownload = async (format: 'pdf' | 'image') => {
     if (!invoiceRef.current) return;
@@ -143,7 +141,7 @@ export function Invoice() {
 
   const handleOrderAgain = () => {
     if (order) {
-      const url = `${window.location.origin}/shop?reorder=${order.public_ref}`;
+      const url = `${window.location.origin}/shop?reorder=${order.public_ref}&token=${order.view_token}`;
       window.open(url, '_blank');
     }
   };

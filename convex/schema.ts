@@ -29,6 +29,7 @@ export default defineSchema({
 
   orders: defineTable({
     publicRef: v.string(),
+    viewToken: v.optional(v.string()),
     customerName: v.string(),
     customerPhone: v.string(),
     items: v.array(
@@ -60,5 +61,6 @@ export default defineSchema({
     ),
     total: v.number(),
     link: v.string(),
-  }).index('by_public_ref', ['publicRef']),
+  }).index('by_public_ref', ['publicRef'])
+    .index('by_ref_and_token', ['publicRef', 'viewToken']),
 });
