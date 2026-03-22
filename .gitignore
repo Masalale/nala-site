@@ -29,7 +29,6 @@ package-lock.json
 .DS_Store
 
 # Convex
-convex/_generated/
 convex/migrations.ts
 
 # Cache
