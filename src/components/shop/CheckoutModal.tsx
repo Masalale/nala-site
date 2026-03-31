@@ -104,10 +104,10 @@ Customer: *${sanitizedName}* ${sanitizedPhone}
 
 See Invoice: ${invoiceUrl}`;
 
-      const waWindow = window.open(`https://wa.me/25475579234?text=${encodeURIComponent(message)}`, '_blank');
+      const waWindow = window.open(`https://wa.me/254755579234?text=${encodeURIComponent(message)}`, '_blank');
       if (!waWindow) {
         // Popup blocked — fallback to direct navigation
-        window.location.href = `https://wa.me/25475579234?text=${encodeURIComponent(message)}`;
+        window.location.href = `https://wa.me/254755579234?text=${encodeURIComponent(message)}`;
       }
       clearCart();
       onClose();
