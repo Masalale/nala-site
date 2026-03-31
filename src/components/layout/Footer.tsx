@@ -65,7 +65,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/25475579234" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors text-sm">
+                <a href="https://wa.me/254755579234" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors text-sm">
                   WhatsApp
                 </a>
               </li>

@@ -236,7 +236,7 @@ export function Invoice() {
           <div>
             <h1 className="text-3xl font-bold text-text">Nature's Lather</h1>
             <p className="text-text-muted">Nairobi, Kenya</p>
-            <p className="text-text-muted">+254 755 79234</p>
+            <p className="text-text-muted">+254 755 579234</p>
           </div>
           <div className="text-right">
             <h2 className="text-4xl font-bold text-secondary opacity-20 mb-1">INVOICE</h2>
@@ -285,7 +285,7 @@ export function Invoice() {
           </div>
           <div className="text-right shrink-0">
             <p className="text-[10px] sm:text-xs text-text-muted uppercase">Send Money</p>
-            <p className="font-mono text-xs sm:text-xl font-bold text-secondary whitespace-nowrap">+254 755 79234</p>
+            <p className="font-mono text-xs sm:text-xl font-bold text-secondary whitespace-nowrap">+254 755 579234</p>
           </div>
         </div>
 
