@@ -12,9 +12,12 @@ export function Shop() {
     // Handle Reorder Logic
     useEffect(() => {
         const reorderRef = searchParams.get('reorder');
-        const reorderToken = searchParams.get('token');
+        const rawReorderToken = searchParams.get('token');
+        const reorderToken = rawReorderToken && rawReorderToken !== 'undefined' && rawReorderToken !== 'null'
+            ? rawReorderToken
+            : undefined;
         if (reorderRef) {
-            getOrderByRef(reorderRef, reorderToken ?? undefined).then(order => {
+            getOrderByRef(reorderRef, reorderToken).then(order => {
                 if (order && order.items.length > 0) {
                     clearCart();
                     order.items.forEach(item => {
