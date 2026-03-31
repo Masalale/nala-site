@@ -6,6 +6,7 @@ const convexUrl = import.meta.env.VITE_CONVEX_URL;
 
 let didWarnMissingEnv = false;
 let _client: ConvexReactClient | null = null;
+const ORDER_FETCH_RETRY_DELAYS_MS = [100, 250, 500] as const;
 
 export function getConvexClient(): ConvexReactClient | null {
   if (_client) return _client;
@@ -56,18 +57,29 @@ export async function createOrderWithValidation(
       return { order: null, error: 'Order service returned an empty response' };
     }
 
-    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const order: Order = {
-      id: result.orderId,
-      public_ref: publicRef,
-      customer_name: customerName,
-      customer_phone: customerPhone,
-      items,
-      total,
-      link,
-      view_token: viewToken,
-      created_at: new Date().toISOString(),
-    };
+    let order = await getOrderByRef(publicRef, viewToken);
+    if (!order) {
+      for (const delayMs of ORDER_FETCH_RETRY_DELAYS_MS) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        order = await getOrderByRef(publicRef, viewToken);
+        if (order) break;
+      }
+    }
+
+    if (!order) {
+      const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      order = {
+        id: result.orderId,
+        public_ref: publicRef,
+        customer_name: customerName,
+        customer_phone: customerPhone,
+        items,
+        total,
+        link,
+        view_token: viewToken,
+        created_at: new Date().toISOString(),
+      };
+    }
 
     return { order, error: null };
   } catch (err) {
