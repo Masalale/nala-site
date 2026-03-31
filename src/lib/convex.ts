@@ -39,13 +39,26 @@ export async function createOrderWithValidation(
     };
   }
 
+  const normalizedItems: CartItem[] = items.map((item) => ({
+    id: item.id,
+    title: item.title,
+    price: item.price,
+    image: item.image,
+    description: item.description,
+    ingredients: item.ingredients,
+    badge: item.badge,
+    category: item.category,
+    quantity: item.quantity,
+    soldOut: item.soldOut,
+  }));
+
   try {
     const result = await client.mutation(api.orders.createOrder, {
       publicRef,
       viewToken,
       customerName,
       customerPhone,
-      items,
+      items: normalizedItems,
       link,
     });
 
@@ -67,13 +80,13 @@ export async function createOrderWithValidation(
     }
 
     if (!order) {
-      const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const total = normalizedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       order = {
         id: result.orderId,
         public_ref: publicRef,
         customer_name: customerName,
         customer_phone: customerPhone,
-        items,
+        items: normalizedItems,
         total,
         link,
         view_token: viewToken,
