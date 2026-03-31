@@ -56,10 +56,18 @@ export async function createOrderWithValidation(
       return { order: null, error: 'Order service returned an empty response' };
     }
 
-    const order = await getOrderByRef(publicRef, viewToken);
-    if (!order) {
-      return { order: null, error: 'Order created but could not be retrieved' };
-    }
+    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const order: Order = {
+      id: result.orderId,
+      public_ref: publicRef,
+      customer_name: customerName,
+      customer_phone: customerPhone,
+      items,
+      total,
+      link,
+      view_token: viewToken,
+      created_at: new Date().toISOString(),
+    };
 
     return { order, error: null };
   } catch (err) {
