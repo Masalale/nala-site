@@ -8,6 +8,7 @@ export const getAll = query({
     return products.map(({ slug, ...rest }) => ({
       ...rest,
       id: slug,
+      soldOut: rest.soldOut ?? rest.badge === 'Sold Out',
     }));
   },
 });
