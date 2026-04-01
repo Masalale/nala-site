@@ -208,7 +208,8 @@ export const seedProducts = internalMutation({
           'Oats',
           'Essential Oils',
         ],
-        badge: 'New' as const,
+        soldOut: true,
+        badge: 'Sold Out' as const,
         category: 'soap' as const,
       },
       {
