@@ -172,8 +172,9 @@ export const seedProducts = internalMutation({
           'Turmeric',
           'Essential Oils',
         ],
-        badge: 'Premium' as const,
+        badge: 'Sold Out' as const,
         category: 'soap' as const,
+        soldOut: true,
       },
       {
         slug: 'gentle-red',
