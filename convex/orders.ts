@@ -1,5 +1,12 @@
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
+import { badgeValidator, categoryValidator } from './schema';
+
+const DEFAULT_STOCKS: Record<string, number> = {
+  detox: 3,
+  refreshing: 3,
+  'gentle-red': 7,
+};
 
 const cartItemValidator = v.object({
   id: v.string(),
@@ -8,23 +15,8 @@ const cartItemValidator = v.object({
   image: v.string(),
   description: v.string(),
   ingredients: v.array(v.string()),
-  badge: v.optional(
-    v.union(
-      v.literal('Bestseller'),
-      v.literal('Premium'),
-      v.literal('New'),
-      v.literal('Sale'),
-      v.literal('Archived'),
-      v.literal('Sold Out'),
-      v.literal('Special Offer'),
-      v.literal('Limited Stock')
-    )
-  ),
-  category: v.union(
-    v.literal('soap'),
-    v.literal('bundle'),
-    v.literal('accessory')
-  ),
+  badge: badgeValidator,
+  category: categoryValidator,
   quantity: v.number(),
   soldOut: v.optional(v.boolean()),
   stock: v.optional(v.number()),
@@ -45,31 +37,13 @@ export const createOrder = mutation({
     // Validation
     const errors: string[] = [];
 
-    if (!publicRef || publicRef.length !== 8) {
-      errors.push('Invalid order reference');
-    }
+    if (!publicRef || publicRef.length !== 8) errors.push('Invalid order reference');
+    if (!viewToken || viewToken.length !== 12) errors.push('Invalid view token');
+    if (!customerName || customerName.trim().length < 2) errors.push('Customer name is required');
+    if (!customerPhone || !/^(?:\+?254|0)[17]\d{8}$/.test(customerPhone.trim())) errors.push('Invalid phone number format');
+    if (!items || items.length === 0) errors.push('Order must contain at least one item');
 
-    if (!viewToken || viewToken.length !== 12) {
-      errors.push('Invalid view token');
-    }
-
-    if (!customerName || customerName.trim().length < 2) {
-      errors.push('Customer name is required');
-    }
-
-    if (!customerPhone || customerPhone.trim().length < 9) {
-      errors.push('Customer phone is required');
-    } else if (!/^(?:\+?254|0)[17]\d{8}$/.test(customerPhone.trim())) {
-      errors.push('Invalid phone number format');
-    }
-
-    if (!items || items.length === 0) {
-      errors.push('Order must contain at least one item');
-    }
-
-    if (errors.length > 0) {
-      return { orderId: null, validationErrors: errors };
-    }
+    if (errors.length > 0) return { orderId: null, validationErrors: errors };
 
     // Check for duplicate publicRef
     const existing = await ctx.db
@@ -77,21 +51,12 @@ export const createOrder = mutation({
       .withIndex('by_public_ref', (q) => q.eq('publicRef', publicRef))
       .first();
 
-    if (existing) {
-      return { orderId: null, validationErrors: ['Duplicate order reference'] };
-    }
+    if (existing) return { orderId: null, validationErrors: ['Duplicate order reference'] };
 
     // Calculate total with 2-for-500 offer on soaps
-    const soapItems = items.filter(i => i.category === 'soap');
-    const totalSoapQty = soapItems.reduce((acc, i) => acc + i.quantity, 0);
-    const soapPairs = Math.floor(totalSoapQty / 2);
-    const remainingSoaps = totalSoapQty % 2;
-
-    const nonSoapTotal = items
-      .filter(i => i.category !== 'soap')
-      .reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    const total = (soapPairs * 500) + (remainingSoaps * 420) + nonSoapTotal;
+    const soapQty = items.filter(i => i.category === 'soap').reduce((acc, i) => acc + i.quantity, 0);
+    const nonSoapTotal = items.filter(i => i.category !== 'soap').reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const total = (Math.floor(soapQty / 2) * 500) + ((soapQty % 2) * 420) + nonSoapTotal;
 
     const orderId = await ctx.db.insert('orders', {
       publicRef,
@@ -111,24 +76,14 @@ export const createOrder = mutation({
         .first();
 
       if (product) {
-        const currentStock =
-          product.stock !== undefined
-            ? product.stock
-            : product.slug === 'detox'
-            ? 3
-            : product.slug === 'refreshing'
-            ? 3
-            : product.slug === 'gentle-red'
-            ? 7
-            : 0;
-
-        const newStock = Math.max(0, currentStock - item.quantity);
+        const curStock = product.stock ?? DEFAULT_STOCKS[product.slug] ?? 0;
+        const newStock = Math.max(0, curStock - item.quantity);
         const isSoldOut = newStock === 0;
 
         await ctx.db.patch(product._id, {
           stock: newStock,
           soldOut: isSoldOut,
-          ...(isSoldOut ? { badge: 'Sold Out' as const } : {}),
+          ...(isSoldOut && { badge: 'Sold Out' as const }),
         });
       }
     }
@@ -140,8 +95,6 @@ export const createOrder = mutation({
 export const getByRef = query({
   args: { publicRef: v.string(), viewToken: v.optional(v.string()) },
   handler: async (ctx, { publicRef, viewToken }) => {
-    // Legacy orders have no viewToken — look up by ref only
-    // New orders require both ref + token for security
     const order = viewToken
       ? await ctx.db
           .query('orders')
@@ -152,10 +105,7 @@ export const getByRef = query({
           .withIndex('by_public_ref', (q) => q.eq('publicRef', publicRef))
           .first();
 
-    if (!order) return null;
-
-    // Block access if order has a token but none was provided
-    if (order.viewToken && !viewToken) return null;
+    if (!order || (order.viewToken && !viewToken)) return null;
 
     return {
       id: order._id,

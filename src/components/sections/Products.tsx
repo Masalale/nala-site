@@ -106,14 +106,18 @@ const FALLBACK_PRODUCTS: Product[] = [
   },
 ];
 
-function ProductModal({ product, onClose }: { product: Product, onClose: () => void }) {
+function useProductStockState(product: Product) {
   const { addToCart, items, stocks } = useCart();
   const cartItem = items.find(i => i.id === product.id);
-  const qtyInCart = cartItem ? cartItem.quantity : 0;
-  
+  const qtyInCart = cartItem?.quantity ?? 0;
   const currentStock = stocks[product.id] ?? product.stock ?? (product.id === 'detox' ? 3 : product.id === 'refreshing' ? 3 : product.id === 'gentle-red' ? 7 : 0);
   const isSoldOut = product.soldOut || currentStock <= 0;
   const isMaxReached = qtyInCart >= currentStock;
+  return { addToCart, currentStock, isSoldOut, isMaxReached };
+}
+
+function ProductModal({ product, onClose }: { product: Product, onClose: () => void }) {
+  const { addToCart, currentStock, isSoldOut, isMaxReached } = useProductStockState(product);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -124,10 +128,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:hidden">
-      <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-md transition-opacity duration-300"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-md transition-opacity duration-300" onClick={onClose} />
 
       <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-scale ring-1 ring-black/5">
         <button
@@ -143,12 +144,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
         <div className="p-5">
           <div className={`flex gap-4 mb-4 ${isSoldOut ? 'grayscale opacity-75' : ''}`}>
             <div className="relative w-36 h-36 shrink-0 rounded-2xl overflow-hidden bg-gray-50 shadow-inner">
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <img src={product.image} alt={product.title} className="w-full h-full object-cover" loading="lazy" />
               {!isSoldOut && currentStock <= 10 && (
                 <span className="absolute bottom-2 left-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-md text-[#b87333] border border-amber-200/60 shadow-sm">
                   {currentStock} left
@@ -158,13 +154,9 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
 
             <div className="flex flex-col justify-center py-1">
               {isSoldOut ? (
-                <span className="inline-block bg-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit">
-                  Sold Out
-                </span>
+                <span className="inline-block bg-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit">Sold Out</span>
               ) : product.badge ? (
-                <span className="inline-block bg-[#da924b] text-text text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit shadow-sm">
-                  {product.badge}
-                </span>
+                <span className="inline-block bg-[#da924b] text-text text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 w-fit shadow-sm">{product.badge}</span>
               ) : null}
               <h3 className={`font-bold text-lg leading-tight mb-1 ${isSoldOut ? 'text-gray-500' : 'text-text'}`}>{product.title}</h3>
               <div className="flex items-center gap-2">
@@ -176,9 +168,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
             </div>
           </div>
 
-          <p className="text-sm text-text-muted leading-relaxed mb-4">
-            {product.description}
-          </p>
+          <p className="text-sm text-text-muted leading-relaxed mb-4">{product.description}</p>
 
           <div className="flex flex-wrap gap-1.5 mb-5">
             {product.ingredients?.map((ing: string) => (
@@ -208,13 +198,7 @@ function ProductModal({ product, onClose }: { product: Product, onClose: () => v
 }
 
 function ProductCard({ product, index, isVisible, onOpen }: { product: Product, index: number, isVisible: boolean, onOpen: () => void }) {
-  const { addToCart, items, stocks } = useCart();
-  const cartItem = items.find(i => i.id === product.id);
-  const qtyInCart = cartItem ? cartItem.quantity : 0;
-  
-  const currentStock = stocks[product.id] ?? product.stock ?? (product.id === 'detox' ? 3 : product.id === 'refreshing' ? 3 : product.id === 'gentle-red' ? 7 : 0);
-  const isSoldOut = product.soldOut || currentStock <= 0;
-  const isMaxReached = qtyInCart >= currentStock;
+  const { addToCart, currentStock, isSoldOut, isMaxReached } = useProductStockState(product);
 
   return (
     <div
@@ -223,14 +207,7 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
         } ${isSoldOut ? 'grayscale opacity-75' : ''}`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      {/* Image Container with Integrated Badge Overlays */}
-      <div
-        className="relative aspect-square overflow-hidden bg-white cursor-pointer md:cursor-default"
-        onClick={() => {
-          if (window.innerWidth < 768) onOpen();
-        }}
-      >
-        {/* Top Badges Bar: Main Badge (Left) & Dynamic Stock Badge (Right) */}
+      <div className="relative aspect-square overflow-hidden bg-white cursor-pointer md:cursor-default" onClick={() => { if (window.innerWidth < 768) onOpen(); }}>
         <div className="absolute top-2 left-2 right-2 md:top-3 md:left-3 md:right-3 z-10 flex items-center justify-between pointer-events-none gap-1">
           {isSoldOut ? (
             <span className="text-[10px] md:text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-900/90 text-white backdrop-blur-sm shadow-sm">
@@ -238,15 +215,12 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
             </span>
           ) : product.badge ? (
             <span className={`text-[10px] md:text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm ${
-              product.badge === 'Special Offer' || product.badge === 'Sale'
-                ? 'bg-[#701a2e] text-[#fff1f2]'
-                : 'bg-[#da924b] text-text'
-              }`}>
+              product.badge === 'Special Offer' || product.badge === 'Sale' ? 'bg-[#701a2e] text-[#fff1f2]' : 'bg-[#da924b] text-text'
+            }`}>
               {product.badge}
             </span>
           ) : <span />}
 
-          {/* Dynamic Live Stock Badge */}
           {!isSoldOut && currentStock <= 10 && (
             <span className="text-[10px] md:text-xs font-medium px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#b87333] border border-amber-200/60 shadow-sm">
               {currentStock} left
@@ -254,43 +228,26 @@ function ProductCard({ product, index, isVisible, onOpen }: { product: Product, 
           )}
         </div>
 
-        {/* Bottom Right Offer Badge */}
         {!isSoldOut && product.category === 'soap' && (
           <span className="absolute bottom-2 right-2 md:bottom-3 md:right-3 z-10 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full bg-[#727b68] text-white shadow-sm">
             2 FOR 500/=
           </span>
         )}
 
-        <img
-          src={product.image}
-          alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-          loading="lazy"
-        />
+        <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
       </div>
 
-      {/* Card Content Area */}
       <div className="p-4 md:p-6 flex flex-col flex-1">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2 gap-1">
-          <h3 className={`text-sm md:text-lg font-semibold leading-tight ${isSoldOut ? 'text-gray-500' : 'text-text'}`}>
-            {product.title}
-          </h3>
+          <h3 className={`text-sm md:text-lg font-semibold leading-tight ${isSoldOut ? 'text-gray-500' : 'text-text'}`}>{product.title}</h3>
           <span className={`font-bold whitespace-nowrap text-sm md:text-base ${isSoldOut ? 'text-gray-400 line-through' : 'text-[#da924b]'}`}>
             KES {product.price.toLocaleString()}
           </span>
         </div>
 
         <div className="mb-3 md:mb-4">
-          <p className="text-xs md:text-sm text-text-muted line-clamp-2 md:line-clamp-none leading-relaxed">
-            {product.description}
-          </p>
-
-          <button
-            onClick={onOpen}
-            className="md:hidden text-xs font-medium text-secondary hover:text-primary transition-colors focus:outline-none flex items-center gap-1 mt-1"
-          >
-            Read more
-          </button>
+          <p className="text-xs md:text-sm text-text-muted line-clamp-2 md:line-clamp-none leading-relaxed">{product.description}</p>
+          <button onClick={onOpen} className="md:hidden text-xs font-medium text-secondary hover:text-primary transition-colors focus:outline-none flex items-center gap-1 mt-1">Read more</button>
         </div>
 
         <div className="hidden md:flex flex-wrap gap-1 mb-4 md:mb-6">
@@ -322,7 +279,6 @@ export function Products() {
   const { maxStockMessage, clearMaxStockMessage } = useCart();
   const rawProducts = useQuery(api.products.getAll);
 
-  // Use Convex DB products if returned and non-empty, otherwise use FALLBACK_PRODUCTS with real stock values
   const products = (rawProducts && rawProducts.length > 0 ? rawProducts : FALLBACK_PRODUCTS) as Product[];
 
   useEffect(() => {
@@ -330,16 +286,13 @@ export function Products() {
     const productId = params.get('product');
     if (productId) {
       const product = products.find(p => p.id === productId);
-      if (product) {
-        setSelectedProduct(product);
-      }
+      if (product) setSelectedProduct(product);
     }
   }, [location.search, products]);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Maximum Stock Warning Alert */}
         {maxStockMessage && (
           <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex justify-between items-center shadow-sm animate-fade-in">
             <div className="flex items-center gap-2 text-sm font-medium">
@@ -348,22 +301,14 @@ export function Products() {
               </svg>
               <span>{maxStockMessage}</span>
             </div>
-            <button
-              onClick={clearMaxStockMessage}
-              className="text-amber-700 hover:text-amber-900 text-xs font-bold uppercase tracking-wider ml-4"
-            >
+            <button onClick={clearMaxStockMessage} className="text-amber-700 hover:text-amber-900 text-xs font-bold uppercase tracking-wider ml-4">
               Dismiss
             </button>
           </div>
         )}
 
-        <div
-          ref={ref}
-          className={`text-center mb-10 md:mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-        >
-          <h2 className="text-3xl sm:text-5xl font-bold text-text mb-3 md:mb-4">
-            Our Collection
-          </h2>
+        <div ref={ref} className={`text-center mb-10 md:mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl sm:text-5xl font-bold text-text mb-3 md:mb-4">Our Collection</h2>
           <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto">
             Handcrafted natural soaps & body care formulated for radiant, healthy skin
           </p>
@@ -373,13 +318,7 @@ export function Products() {
           {products
             .filter(p => p.badge !== 'Archived')
             .map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                index={index}
-                isVisible={isVisible}
-                onOpen={() => setSelectedProduct(product)}
-              />
+              <ProductCard key={product.id} product={product} index={index} isVisible={isVisible} onOpen={() => setSelectedProduct(product)} />
             ))}
         </div>
       </div>
@@ -389,8 +328,7 @@ export function Products() {
           product={selectedProduct}
           onClose={() => {
             setSelectedProduct(null);
-            const newUrl = window.location.pathname;
-            window.history.pushState({}, '', newUrl);
+            window.history.pushState({}, '', window.location.pathname);
           }}
         />
       )}

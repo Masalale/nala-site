@@ -2,11 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Product, CartItem } from '../types/shop';
 
-const DEFAULT_STOCKS: Record<string, number> = {
-  detox: 3,
-  refreshing: 3,
-  'gentle-red': 7,
-};
+const DEFAULT_STOCKS: Record<string, number> = { detox: 3, refreshing: 3, 'gentle-red': 7 };
 
 interface CartContextType {
   items: CartItem[];
@@ -41,18 +37,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  const getStockLimit = (product: Product | CartItem): number => {
-    if (stocks[product.id] !== undefined) return stocks[product.id];
-    if (product.stock !== undefined) return product.stock;
-    if (DEFAULT_STOCKS[product.id] !== undefined) return DEFAULT_STOCKS[product.id];
-    return product.soldOut ? 0 : 99;
-  };
+  const getStockLimit = (product: Product | CartItem): number =>
+    stocks[product.id] ?? product.stock ?? DEFAULT_STOCKS[product.id] ?? (product.soldOut ? 0 : 99);
 
   const deductStock = (purchasedItems: CartItem[]) => {
     setStocks(current => {
       const updated = { ...current };
       purchasedItems.forEach(item => {
-        const cur = updated[item.id] !== undefined ? updated[item.id] : (DEFAULT_STOCKS[item.id] ?? 0);
+        const cur = updated[item.id] ?? DEFAULT_STOCKS[item.id] ?? 0;
         updated[item.id] = Math.max(0, cur - item.quantity);
       });
       try {
@@ -66,110 +58,66 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = (product: Product, quantity = 1) => {
     const stockLimit = getStockLimit(product);
-
-    if (stockLimit <= 0) {
-      setMaxStockMessage(`${product.title} is currently sold out.`);
-      return;
-    }
+    if (stockLimit <= 0) return setMaxStockMessage(`${product.title} is currently sold out.`);
 
     setItems(current => {
-      const existing = current.find(item => item.id === product.id);
-      const currentQty = existing ? existing.quantity : 0;
-      const targetQty = currentQty + quantity;
+      const existing = current.find(i => i.id === product.id);
+      const targetQty = (existing?.quantity ?? 0) + quantity;
 
       if (targetQty > stockLimit) {
         setMaxStockMessage(`Only ${stockLimit} ${product.title} bar${stockLimit > 1 ? 's' : ''} available in stock.`);
-        const allowedAdd = Math.max(0, stockLimit - currentQty);
-        if (allowedAdd <= 0) return current;
-        if (existing) {
-          return current.map(item =>
-            item.id === product.id ? { ...item, quantity: stockLimit } : item
-          );
-        }
-        return [...current, { ...product, quantity: allowedAdd, stock: stockLimit }];
+        return existing
+          ? current.map(i => i.id === product.id ? { ...i, quantity: stockLimit } : i)
+          : [...current, { ...product, quantity: stockLimit, stock: stockLimit }];
       }
 
       setMaxStockMessage(null);
-      if (existing) {
-        return current.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: targetQty, stock: stockLimit }
-            : item
-        );
-      }
-      return [...current, { ...product, quantity, stock: stockLimit }];
+      return existing
+        ? current.map(i => i.id === product.id ? { ...i, quantity: targetQty, stock: stockLimit } : i)
+        : [...current, { ...product, quantity, stock: stockLimit }];
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems(current => current.filter(item => item.id !== productId));
-  };
+  const removeFromCart = (productId: string) => setItems(c => c.filter(i => i.id !== productId));
 
   const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity < 1) {
-      removeFromCart(productId);
-      return;
-    }
+    if (quantity < 1) return removeFromCart(productId);
+
     setItems(current => {
       const target = current.find(i => i.id === productId);
       if (!target) return current;
-      const stockLimit = getStockLimit(target);
-      if (quantity > stockLimit) {
-        setMaxStockMessage(`Only ${stockLimit} ${target.title} bar${stockLimit > 1 ? 's' : ''} available in stock.`);
-        return current.map(item =>
-          item.id === productId ? { ...item, quantity: stockLimit } : item
-        );
+
+      const limit = getStockLimit(target);
+      if (quantity > limit) {
+        setMaxStockMessage(`Only ${limit} ${target.title} bar${limit > 1 ? 's' : ''} available in stock.`);
+        return current.map(i => i.id === productId ? { ...i, quantity: limit } : i);
       }
+
       setMaxStockMessage(null);
-      return current.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      );
+      return current.map(i => i.id === productId ? { ...i, quantity } : i);
     });
   };
 
-  const clearCart = () => {
-    setItems([]);
-  };
+  const clearCart = () => setItems([]);
+  const clearMaxStockMessage = () => setMaxStockMessage(null);
 
-  const clearMaxStockMessage = () => {
-    setMaxStockMessage(null);
-  };
-
-  // 2-for-500 KES offer calculation for soaps
+  // 2-for-500 KES offer calculations for soaps
   const soapItems = items.filter(i => i.category === 'soap');
   const totalSoapQty = soapItems.reduce((acc, i) => acc + i.quantity, 0);
-  const soapPairs = Math.floor(totalSoapQty / 2);
-  const remainingSoaps = totalSoapQty % 2;
-
-  const rawSoapTotal = soapItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discountedSoapTotal = (soapPairs * 500) + (remainingSoaps * 420);
+  const rawSoapTotal = soapItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const discountedSoapTotal = Math.floor(totalSoapQty / 2) * 500 + (totalSoapQty % 2) * 420;
   const soapDiscount = Math.max(0, rawSoapTotal - discountedSoapTotal);
-
-  const nonSoapTotal = items
-    .filter(i => i.category !== 'soap')
-    .reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const nonSoapTotal = items.filter(i => i.category !== 'soap').reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   const rawCartTotal = rawSoapTotal + nonSoapTotal;
   const cartTotal = discountedSoapTotal + nonSoapTotal;
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
     <CartContext.Provider value={{
-      items,
-      isCartOpen,
-      stocks,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      deductStock,
-      setIsCartOpen,
-      cartTotal,
-      rawCartTotal,
-      soapDiscount,
-      itemCount,
-      maxStockMessage,
-      clearMaxStockMessage,
+      items, isCartOpen, stocks, addToCart, removeFromCart, updateQuantity,
+      clearCart, deductStock, setIsCartOpen, cartTotal, rawCartTotal,
+      soapDiscount, itemCount, maxStockMessage, clearMaxStockMessage,
     }}>
       {children}
     </CartContext.Provider>
