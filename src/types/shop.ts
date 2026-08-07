@@ -1,3 +1,5 @@
+export type ProductBadge = 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | 'Sold Out' | 'Special Offer' | 'Limited Stock';
+
 export interface Product {
   id: string;
   title: string;
@@ -5,9 +7,10 @@ export interface Product {
   image: string;
   description: string;
   ingredients: string[];
-  badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | 'Sold Out';
+  badge?: ProductBadge;
   category: 'soap' | 'bundle' | 'accessory';
   soldOut?: boolean;
+  stock?: number;
 }
 
 export interface CartItem {
@@ -17,10 +20,11 @@ export interface CartItem {
   image: string;
   description: string;
   ingredients: string[];
-  badge?: 'Bestseller' | 'Premium' | 'New' | 'Sale' | 'Archived' | 'Sold Out';
+  badge?: ProductBadge;
   category: 'soap' | 'bundle' | 'accessory';
   quantity: number;
   soldOut?: boolean;
+  stock?: number;
 }
 
 export type CustomerDetails = {

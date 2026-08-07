@@ -16,7 +16,9 @@ export default defineSchema({
         v.literal('New'),
         v.literal('Sale'),
         v.literal('Archived'),
-        v.literal('Sold Out')
+        v.literal('Sold Out'),
+        v.literal('Special Offer'),
+        v.literal('Limited Stock')
       )
     ),
     category: v.union(
@@ -25,6 +27,7 @@ export default defineSchema({
       v.literal('accessory')
     ),
     soldOut: v.optional(v.boolean()),
+    stock: v.optional(v.number()),
   }).index('by_slug', ['slug']),
 
   orders: defineTable({
@@ -47,7 +50,9 @@ export default defineSchema({
             v.literal('New'),
             v.literal('Sale'),
             v.literal('Archived'),
-            v.literal('Sold Out')
+            v.literal('Sold Out'),
+            v.literal('Special Offer'),
+            v.literal('Limited Stock')
           )
         ),
         category: v.union(
@@ -57,6 +62,7 @@ export default defineSchema({
         ),
         quantity: v.number(),
         soldOut: v.optional(v.boolean()),
+        stock: v.optional(v.number()),
       })
     ),
     total: v.number(),

@@ -126,6 +126,7 @@ export const seedProducts = internalMutation({
         badge: 'Sold Out' as const,
         category: 'accessory' as const,
         soldOut: true,
+        stock: 0,
       },
       {
         slug: 'bundle-full',
@@ -135,9 +136,10 @@ export const seedProducts = internalMutation({
         image: '/images/collection.webp',
         price: 2100,
         ingredients: ['All 5 Soaps', 'Soap Saver'],
-        badge: 'Premium' as const,
+        badge: 'Sold Out' as const,
         category: 'bundle' as const,
         soldOut: true,
+        stock: 0,
       },
       {
         slug: 'refreshing',
@@ -154,8 +156,10 @@ export const seedProducts = internalMutation({
           'Rosemary',
           'Essential Oils',
         ],
-        badge: 'Bestseller' as const,
+        badge: 'Limited Stock' as const,
         category: 'soap' as const,
+        soldOut: false,
+        stock: 3,
       },
       {
         slug: 'turmeric',
@@ -175,6 +179,7 @@ export const seedProducts = internalMutation({
         badge: 'Sold Out' as const,
         category: 'soap' as const,
         soldOut: true,
+        stock: 0,
       },
       {
         slug: 'gentle-red',
@@ -191,8 +196,10 @@ export const seedProducts = internalMutation({
           'Red Clay',
           'Essential Oils',
         ],
-        badge: 'New' as const,
+        badge: 'Special Offer' as const,
         category: 'soap' as const,
+        soldOut: false,
+        stock: 7,
       },
       {
         slug: 'sensitive',
@@ -212,6 +219,7 @@ export const seedProducts = internalMutation({
         soldOut: true,
         badge: 'Sold Out' as const,
         category: 'soap' as const,
+        stock: 0,
       },
       {
         slug: 'detox',
@@ -228,7 +236,10 @@ export const seedProducts = internalMutation({
           'Activated Charcoal',
           'Essential Oils',
         ],
+        badge: 'Limited Stock' as const,
         category: 'soap' as const,
+        soldOut: false,
+        stock: 3,
       },
       {
         slug: 'exfoliant',
@@ -238,7 +249,10 @@ export const seedProducts = internalMutation({
         image: '/images/exfoliant.webp',
         price: 420,
         ingredients: ['Goat Milk', 'Coffee grounds', 'Essential Oils'],
+        badge: 'Sold Out' as const,
         category: 'soap' as const,
+        soldOut: true,
+        stock: 0,
       },
       {
         slug: 'gentle-red-duo',
@@ -254,8 +268,10 @@ export const seedProducts = internalMutation({
           'Red Clay',
           'Essential Oils',
         ],
-        badge: 'Sale' as const,
+        badge: 'Archived' as const,
         category: 'bundle' as const,
+        soldOut: true,
+        stock: 0,
       },
     ];
 
