@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { lenisRef } from '../utils/SmoothScroll';
-
-
-
+import { useCart } from '../../context/CartContext';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { stocks } = useCart();
+
+  const detoxStock = stocks.detox ?? 3;
+  const refreshingStock = stocks.refreshing ?? 3;
+  const gentleRedStock = stocks['gentle-red'] ?? 7;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -60,23 +63,30 @@ export function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
-      {/* Announcement Bar Template — uncomment and customise for promotions
+      {/* Announcement Bar — 2 Soaps for KES 500 Special Offer */}
       <Link
         to="/shop"
-        className="relative bg-[#701a2e] text-[#fff1f2] h-11 flex items-center overflow-hidden hover:bg-[#831c35] transition-colors z-[51] shadow-md border-b border-white/5"
+        className="relative bg-gradient-to-r from-[#701a2e] via-[#831c35] to-[#701a2e] text-[#fff1f2] h-11 flex items-center overflow-hidden hover:brightness-105 transition-all z-[51] shadow-md border-b border-white/10 group"
       >
-        <div className="absolute flex items-center animate-marquee whitespace-nowrap min-w-full">
+        <div className="absolute flex items-center animate-marquee whitespace-nowrap min-w-full group-hover:[animation-play-state:paused]">
           {[1, 2, 3, 4].map((i) => (
-            <span key={i} className="mx-6 text-[13px] font-medium tracking-wide flex items-center gap-3">
-              <span className="font-bold tracking-widest text-white uppercase bg-white/10 px-2 py-0.5 rounded-[4px]">PROMO TITLE</span>
-              <span className="text-white/80">Promo description here</span>
-              <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-              <span className="text-[#da924b] font-medium">Ends DATE</span>
+            <span key={i} className="mx-6 text-[12px] sm:text-[13px] font-medium tracking-wide flex items-center gap-3">
+              <span className="font-bold tracking-widest text-[#701a2e] uppercase bg-[#e2bd8f] px-2 py-0.5 rounded-[4px] shadow-sm">
+                2 FOR KES 500/=
+              </span>
+              <span className="text-white font-semibold">
+                Get Any 2 Soaps for KES 500/= <span className="text-white/80 font-normal">(Save KES 340)</span>
+              </span>
+              <span className="w-1.5 h-1.5 bg-[#da924b] rounded-full" />
+              <span className="text-[#e2bd8f] font-medium flex items-center gap-1.5">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+                Stock: {detoxStock} Detox • {refreshingStock} Refreshing • {gentleRedStock} Gentle Red
+              </span>
+              <span className="text-white/40">|</span>
             </span>
           ))}
         </div>
       </Link>
-      */}
 
       {/* Main Navbar */}
       <nav
