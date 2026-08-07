@@ -15,7 +15,9 @@ const cartItemValidator = v.object({
       v.literal('New'),
       v.literal('Sale'),
       v.literal('Archived'),
-      v.literal('Sold Out')
+      v.literal('Sold Out'),
+      v.literal('Special Offer'),
+      v.literal('Limited Stock')
     )
   ),
   category: v.union(
@@ -25,6 +27,7 @@ const cartItemValidator = v.object({
   ),
   quantity: v.number(),
   soldOut: v.optional(v.boolean()),
+  stock: v.optional(v.number()),
 });
 
 export const createOrder = mutation({
@@ -78,7 +81,17 @@ export const createOrder = mutation({
       return { orderId: null, validationErrors: ['Duplicate order reference'] };
     }
 
-    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // Calculate total with 2-for-500 offer on soaps
+    const soapItems = items.filter(i => i.category === 'soap');
+    const totalSoapQty = soapItems.reduce((acc, i) => acc + i.quantity, 0);
+    const soapPairs = Math.floor(totalSoapQty / 2);
+    const remainingSoaps = totalSoapQty % 2;
+
+    const nonSoapTotal = items
+      .filter(i => i.category !== 'soap')
+      .reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    const total = (soapPairs * 500) + (remainingSoaps * 420) + nonSoapTotal;
 
     const orderId = await ctx.db.insert('orders', {
       publicRef,
@@ -89,6 +102,36 @@ export const createOrder = mutation({
       total,
       link,
     });
+
+    // Deduct stock from products database dynamically
+    for (const item of items) {
+      const product = await ctx.db
+        .query('products')
+        .withIndex('by_slug', (q) => q.eq('slug', item.id))
+        .first();
+
+      if (product) {
+        const currentStock =
+          product.stock !== undefined
+            ? product.stock
+            : product.slug === 'detox'
+            ? 3
+            : product.slug === 'refreshing'
+            ? 3
+            : product.slug === 'gentle-red'
+            ? 7
+            : 0;
+
+        const newStock = Math.max(0, currentStock - item.quantity);
+        const isSoldOut = newStock === 0;
+
+        await ctx.db.patch(product._id, {
+          stock: newStock,
+          soldOut: isSoldOut,
+          ...(isSoldOut ? { badge: 'Sold Out' as const } : {}),
+        });
+      }
+    }
 
     return { orderId, validationErrors: [] };
   },

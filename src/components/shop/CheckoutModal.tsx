@@ -12,7 +12,7 @@ interface CheckoutModalProps {
 }
 
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
-  const { items, clearCart } = useCart();
+  const { items, clearCart, soapDiscount, deductStock } = useCart();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -89,13 +89,15 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         `*${item.quantity}x* ${item.title} KES ${item.price.toLocaleString()}`
       ).join('\n');
 
+      const discountLine = soapDiscount > 0 ? `\n*2-Soap Offer Discount:* -KES ${soapDiscount.toLocaleString()}` : '';
+
       // Construct the exact message pattern requested
       const message = `Hi Nala! 
 I'd like to place an order.
 
 *#${publicRef}* 
 
-${itemsList}
+${itemsList}${discountLine}
 
 Item total: KES ${savedOrder.total.toLocaleString()} (Qty: ${items.reduce((acc, item) => acc + item.quantity, 0)})
 *Total : KES ${savedOrder.total.toLocaleString()}*
@@ -109,6 +111,7 @@ See Invoice: ${invoiceUrl}`;
         // Popup blocked — fallback to direct navigation
         window.location.href = `https://wa.me/254755579234?text=${encodeURIComponent(message)}`;
       }
+      deductStock(items);
       clearCart();
       onClose();
     } else {
