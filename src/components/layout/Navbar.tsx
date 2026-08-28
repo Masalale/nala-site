@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { lenisRef } from '../utils/SmoothScroll';
-import { useCart } from '../../context/CartContext';
+// import { useCart } from '../../context/CartContext'; // banner offer ended — keep for easy re-enable
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { stocks } = useCart();
-
-  const detoxStock = stocks.detox ?? 3;
-  const refreshingStock = stocks.refreshing ?? 3;
-  const gentleRedStock = stocks['gentle-red'] ?? 7;
+  // const { stocks } = useCart();
+  // const detoxStock = stocks.detox ?? 3;
+  // const refreshingStock = stocks.refreshing ?? 3;
+  // const gentleRedStock = stocks['gentle-red'] ?? 7;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -63,7 +62,7 @@ export function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
-      {/* Announcement Bar — 2 Soaps for KES 500 Special Offer */}
+      {/* Announcement Bar — 2 Soaps for KES 500 Special Offer — OFFER ENDED, commented out
       <Link
         to="/shop"
         className="relative bg-gradient-to-r from-[#701a2e] via-[#831c35] to-[#701a2e] text-[#fff1f2] h-11 flex items-center overflow-hidden hover:brightness-105 transition-all z-[51] shadow-md border-b border-white/10 group"
@@ -87,6 +86,7 @@ export function Navbar() {
           ))}
         </div>
       </Link>
+      */}
 
       {/* Main Navbar */}
       <nav

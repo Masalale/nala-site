@@ -3,9 +3,9 @@ import { v } from 'convex/values';
 import { badgeValidator, categoryValidator } from './schema';
 
 const DEFAULT_STOCKS: Record<string, number> = {
-  detox: 3,
-  refreshing: 3,
-  'gentle-red': 7,
+  detox: 0,
+  refreshing: 0,
+  'gentle-red': 0,
 };
 
 const cartItemValidator = v.object({

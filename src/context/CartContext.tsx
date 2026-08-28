@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Product, CartItem } from '../types/shop';
 
-const DEFAULT_STOCKS: Record<string, number> = { detox: 3, refreshing: 3, 'gentle-red': 7 };
+const DEFAULT_STOCKS: Record<string, number> = { detox: 0, refreshing: 0, 'gentle-red': 0 };
 
 interface CartContextType {
   items: CartItem[];
