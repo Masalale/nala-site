@@ -286,6 +286,7 @@ export function Products() {
     const productId = params.get('product');
     if (productId) {
       const product = products.find(p => p.id === productId);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs modal state with URL deep-link ?product=xxx on mount/route change
       if (product) setSelectedProduct(product);
     }
   }, [location.search, products]);

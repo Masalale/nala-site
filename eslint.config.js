@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'convex/_generated', '.omo']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -22,5 +22,9 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
+  },
+  {
+    files: ['src/context/CartContext.tsx', 'src/components/utils/SmoothScroll.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])

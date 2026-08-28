@@ -19,6 +19,7 @@ export function Invoice() {
 
   useEffect(() => {
     if (!ref || ref.length !== 8) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- validates URL param and syncs loading/error UI on mount
       setError('Invalid order reference');
       setLoading(false);
       return;

@@ -118,39 +118,38 @@ export function Hero() {
     const rStep = isMobile ? 3 : 8;
     const startOffset = isMobile ? -35 : 0;
 
-    let zIndex = 0;
-    let opacity = 0;
-    let transform = '';
-    let filter = '';
-    let pointerEvents: 'auto' | 'none' = 'none';
-
     if (offset === 0) {
-      zIndex = 50;
-      opacity = 1;
-      transform = `translateX(${startOffset}px) rotate(0deg) scale(1)`;
-      filter = 'brightness(1.1)';
-      pointerEvents = 'auto';
-    } else if (offset <= 3) {
-      zIndex = 50 - offset;
+      return {
+        zIndex: 50,
+        opacity: 1,
+        transform: `translateX(${startOffset}px) rotate(0deg) scale(1)`,
+        transformOrigin,
+        filter: 'brightness(1.1)',
+        pointerEvents: 'auto' as const,
+        transition: 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
+      } as React.CSSProperties;
+    }
+    if (offset <= 3) {
       const rotate = offset * rStep;
       const tx = startOffset + (offset * xStep);
       const scale = 1 - (offset * 0.05);
-      transform = `translateX(${tx}px) rotate(${rotate}deg) scale(${scale})`;
-      opacity = 1 - (offset * 0.15);
-      filter = `blur(${offset * 1}px) brightness(${1 - offset * 0.1})`;
-    } else {
-      zIndex = 0;
-      opacity = 0;
-      transform = 'translateX(50px) rotate(10deg) scale(0.5)';
+      return {
+        zIndex: 50 - offset,
+        opacity: 1 - (offset * 0.15),
+        transform: `translateX(${tx}px) rotate(${rotate}deg) scale(${scale})`,
+        transformOrigin,
+        filter: `blur(${offset * 1}px) brightness(${1 - offset * 0.1})`,
+        pointerEvents: 'none' as const,
+        transition: 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
+      } as React.CSSProperties;
     }
-
     return {
-      zIndex,
-      opacity,
-      transform,
+      zIndex: 0,
+      opacity: 0,
+      transform: 'translateX(50px) rotate(10deg) scale(0.5)',
       transformOrigin,
-      filter,
-      pointerEvents,
+      filter: '',
+      pointerEvents: 'none' as const,
       transition: 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
     } as React.CSSProperties;
   };
